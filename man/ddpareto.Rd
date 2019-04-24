@@ -22,7 +22,7 @@ vector representing probabilities \eqn{P(N=n)}.
 Probaility mass function.
 }
 \details{
-ddpareto gives the distribution function.
+ddpareto gives the probability mass.
 }
 \examples{
 prob<-ddpareto(seq(1,10,1),delta=0.2,p=0.6)

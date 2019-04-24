@@ -2,7 +2,7 @@
 #'
 #' Random sample generation.
 #'
-#' ddpareto gives the distribution function.
+#' rdpareto generates random sample from discrete pareto distribution.
 #'
 #' @param n size of sample.
 #' @param delta  shape paramter which must be numeric greater than or equal to 0.
@@ -28,7 +28,7 @@ rdpareto<-function(n,delta,p){
 #'
 #' Probaility mass function.
 #'
-#' ddpareto gives the distribution function.
+#' ddpareto gives the probability mass.
 #'
 #' @param N A vector of random sample from discrete Pareto.
 #' @param delta A shape paramter which must be numeric greater than or equal to 0.

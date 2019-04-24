@@ -20,7 +20,7 @@ vector of sample generate from discrete Pareto distribution.
 Random sample generation.
 }
 \details{
-ddpareto gives the distribution function.
+rdpareto generates random sample from discrete pareto distribution.
 }
 \examples{
 N<-rdpareto(20, delta=0.2,p=0.6)
