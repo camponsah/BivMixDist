@@ -1,4 +1,4 @@
-#' The bivariate exponential geometric distrubution (BEG)
+#' Fits the bivariate exponential geometric distrubution (BEG) to data
 #'
 #' This function computes the parameter estimates, confidence interval, deviance and covariance matrix for exponential geometric distribution.
 #'

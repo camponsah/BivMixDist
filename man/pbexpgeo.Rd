@@ -21,7 +21,7 @@ pbexpgeo(data, beta, p, lower.tail = TRUE, log.p = FALSE)
 vector of distribution.
 }
 \description{
-Distribution function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and \p in (0,1).
+Distribution function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and p in (0,1).
 }
 \details{
 pbexpgeo is the distribution  function.

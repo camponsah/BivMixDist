@@ -62,7 +62,7 @@ dbexpgeo<- function(data,beta,p,log.p=FALSE){
 
 #' The bivariate exponential geometric distrubution (BEG)
 #'
-#' Distribution function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and \p in (0,1).
+#' Distribution function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and p in (0,1).
 #'
 #' pbexpgeo is the distribution  function.
 #'
