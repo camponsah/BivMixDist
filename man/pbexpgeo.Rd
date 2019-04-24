@@ -2,18 +2,18 @@
 % Please edit documentation in R/beg_distribution.R
 \name{pbexpgeo}
 \alias{pbexpgeo}
-\title{The Bivariate exponential geometric distrubution (BEG)}
+\title{The bivariate exponential geometric distrubution (BEG)}
 \usage{
 pbexpgeo(data, beta, p, lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
-\item{data}{is bivariate vector  (X,N) vector representing observations from BEG model}
+\item{data}{is bivariate vector  (X,N) vector representing observations from BEG model.}
 
-\item{beta}{shape paramter which must be numeric greater than or equal to 0.}
+\item{beta}{scale paramter which must be numeric greater than 0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 
-\item{lower.tail}{logical; if TRUE (default), probabilities are \eqn{P[X\leqx,N\leq n]}, otherwise, \eqn{$P[X>x,N> n]$}.}
+\item{lower.tail}{logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.}
 
 \item{log.p}{logical; if TRUE, probabilities p are given as log(p).}
 }
@@ -21,7 +21,7 @@ pbexpgeo(data, beta, p, lower.tail = TRUE, log.p = FALSE)
 vector of distribution.
 }
 \description{
-Distribution function.
+Distribution function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and \p in (0,1).
 }
 \details{
 pbexpgeo is the distribution  function.

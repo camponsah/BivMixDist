@@ -1,11 +1,11 @@
-#' The Bivariate exponential geometric distrubution (BEG)
+#' The bivariate exponential geometric distrubution (BEG)
 #'
-#' Random sample generation.
+#' Random sample generating function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and p in (0,1).
 #'
-#' rbexpgeo generates random sample from discrete pareto distribution.
+#' rbexpgeo generates random sample from BEG distribution.
 #'
 #' @param n size of sample.
-#' @param beta  shape paramter which must be numeric greater than or equal to 0.
+#' @param beta  scale paramter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #'
 #' @return  vector of sample generate from BEG model.
@@ -25,14 +25,14 @@ rbexpgeo<- function(n,beta,p){
 }
 
 
-#' The Bivariate exponential geometric distrubution (BEG)
+#' The bivariate exponential geometric distrubution (BEG)
 #'
-#' Density.
+#' Density function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and p in (0,1).
 #'
 #' dbexpgeo is the density  function.
 #'
-#' @param data is bivariate vector  (X,N) vector representing observations from BEG model
-#' @param beta  shape paramter which must be numeric greater than or equal to 0.
+#' @param data is bivariate vector  (X,N) vector representing observations from BEG model.
+#' @param beta  scale paramter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
@@ -60,16 +60,16 @@ dbexpgeo<- function(data,beta,p,log.p=FALSE){
 }
 
 
-#' The Bivariate exponential geometric distrubution (BEG)
+#' The bivariate exponential geometric distrubution (BEG)
 #'
-#' Distribution function.
+#' Distribution function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and \p in (0,1).
 #'
 #' pbexpgeo is the distribution  function.
 #'
-#' @param data is bivariate vector  (X,N) vector representing observations from BEG model
-#' @param beta  shape paramter which must be numeric greater than or equal to 0.
+#' @param data is bivariate vector  (X,N) vector representing observations from BEG model.
+#' @param beta  scale paramter which must be numeric greater than 0.
 #' @param p numeric parameter between 0 and 1.
-#' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X\leqx,N\leq n]}, otherwise, \eqn{$P[X>x,N> n]$}.
+#' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
 #' @return  vector of distribution.

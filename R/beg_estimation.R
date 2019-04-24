@@ -1,8 +1,8 @@
-#' The Bivariate exponential geometric distrubution (BEG)
+#' The bivariate exponential geometric distrubution (BEG)
 #'
-#' BEG Parameter estimation
+#' This function computes the parameter estimates, confidence interval, deviance and covariance matrix for exponential geometric distribution.
 #'
-#' bexpgeo_fit fits  BEG model to data.
+#' bexpgeo_fit  fits BEG model to data.
 #'
 #' @param data is bivariate vector  (X,N) vector representing observations from BEG model
 #' @param level confidence level espressed between 0 and 1 (Default is 0.95)

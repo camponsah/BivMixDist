@@ -2,7 +2,7 @@
 % Please edit documentation in R/beg_estimation.R
 \name{bexpgeo_fit}
 \alias{bexpgeo_fit}
-\title{The Bivariate exponential geometric distrubution (BEG)}
+\title{The bivariate exponential geometric distrubution (BEG)}
 \usage{
 bexpgeo_fit(data, level = 0.95)
 }
@@ -15,10 +15,10 @@ bexpgeo_fit(data, level = 0.95)
 list of parameter estimates, confidence interval, deviance and covariance matrix
 }
 \description{
-BEG Parameter estimation
+This function computes the parameter estimates, confidence interval, deviance and covariance matrix for exponential geometric distribution.
 }
 \details{
-bexpgeo_fit fits  BEG model to data.
+bexpgeo_fit  fits BEG model to data.
 }
 \examples{
 Data.df<-rbexpgeo(n=100,beta = 10,p=0.45)

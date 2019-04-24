@@ -2,14 +2,14 @@
 % Please edit documentation in R/beg_distribution.R
 \name{rbexpgeo}
 \alias{rbexpgeo}
-\title{The Bivariate exponential geometric distrubution (BEG)}
+\title{The bivariate exponential geometric distrubution (BEG)}
 \usage{
 rbexpgeo(n, beta, p)
 }
 \arguments{
 \item{n}{size of sample.}
 
-\item{beta}{shape paramter which must be numeric greater than or equal to 0.}
+\item{beta}{scale paramter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 }
@@ -17,10 +17,10 @@ rbexpgeo(n, beta, p)
 vector of sample generate from BEG model.
 }
 \description{
-Random sample generation.
+Random sample generating function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and p in (0,1).
 }
 \details{
-rbexpgeo generates random sample from discrete pareto distribution.
+rbexpgeo generates random sample from BEG distribution.
 }
 \examples{
 N<-rbexpgeo(20, beta=2,p=0.6)

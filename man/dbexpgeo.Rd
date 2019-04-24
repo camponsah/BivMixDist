@@ -2,14 +2,14 @@
 % Please edit documentation in R/beg_distribution.R
 \name{dbexpgeo}
 \alias{dbexpgeo}
-\title{The Bivariate exponential geometric distrubution (BEG)}
+\title{The bivariate exponential geometric distrubution (BEG)}
 \usage{
 dbexpgeo(data, beta, p, log.p = FALSE)
 }
 \arguments{
-\item{data}{is bivariate vector  (X,N) vector representing observations from BEG model}
+\item{data}{is bivariate vector  (X,N) vector representing observations from BEG model.}
 
-\item{beta}{shape paramter which must be numeric greater than or equal to 0.}
+\item{beta}{scale paramter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 
@@ -19,7 +19,7 @@ dbexpgeo(data, beta, p, log.p = FALSE)
 vector of densities.
 }
 \description{
-Density.
+Density function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and p in (0,1).
 }
 \details{
 dbexpgeo is the density  function.
