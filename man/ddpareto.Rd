@@ -12,10 +12,24 @@ ddpareto(N, delta, p, log.p = FALSE)
 \item{delta}{A shape paramter which must be numeric greater than or equal to 0.}
 
 \item{p}{A numeric parameter between 0 and 1}
+
+\item{log.p}{logical; if TRUE, probabilities p are given as log(p).}
 }
 \value{
-A vector consiting of densities
+vector representing probabilities \eqn{P(N=n)}.
 }
 \description{
 Probaility mass function.
+}
+\details{
+ddpareto gives the distribution function.
+}
+\examples{
+prob<-ddpareto(seq(1,10,1),delta=0.2,p=0.6)
+prob
+
+}
+\references{
+Buddana, A. and  Kozubowski, T. J. (2014). Discrete Pareto distribution. Journal of Economics and Quality Control, 29(2):143-156.
+\url{https://doi.org/10.1515/eqc-2014-0014}
 }

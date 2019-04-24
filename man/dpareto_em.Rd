@@ -7,19 +7,28 @@
 dpareto_em(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16)
 }
 \arguments{
-\item{data}{A vector of random sample from discrete pareto distribution}
+\item{data}{vector of random sample from discrete pareto distribution}
 
-\item{delta}{A shape paramter which must be numeric greater than or equal to 0}
+\item{delta}{shape paramter which must be numeric greater than or equal to 0}
 
-\item{p}{A numeric parameter between 0 and 1}
+\item{p}{numeric parameter between 0 and 1}
 
-\item{maxiter}{Maximum number of iterations}
+\item{maxiter}{maximum number of iterations}
 
 \item{tol}{tolerance value}
 }
 \value{
-A list containg parameter estimates, Deviance and data frame of iteration
+list containg parameter estimates, Deviance and data frame of iteration
 }
 \description{
 Takes initial guess of parameters in discrete pareto and use Em algorithm to estmate the MLE
+}
+\examples{
+N<-rdpareto(500, delta=0.2,p=0.6)
+fit<-dpareto_em(N,maxiter = 1000)
+fit$par
+
+}
+\references{
+Amponsah, C. K.,  Kozubowski, T. J. and Panorska (2019). Fitting Discrete Pareto Distribution to data using the EM Algorithm. Unpublished.
 }

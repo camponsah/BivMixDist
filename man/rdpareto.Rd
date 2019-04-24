@@ -7,15 +7,27 @@
 rdpareto(n, delta, p)
 }
 \arguments{
-\item{n}{Size of sample.}
+\item{n}{size of sample.}
 
-\item{delta}{A shape paramter which must be numeric greater than or equal to 0.}
+\item{delta}{shape paramter which must be numeric greater than or equal to 0.}
 
-\item{p}{A numeric parameter between 0 and 1}
+\item{p}{numeric parameter between 0 and 1.}
 }
 \value{
-A vector of sample generate from discrete Pareto distribution.
+vector of sample generate from discrete Pareto distribution.
 }
 \description{
 Random sample generation.
+}
+\details{
+ddpareto gives the distribution function.
+}
+\examples{
+N<-rdpareto(20, delta=0.2,p=0.6)
+N
+
+}
+\references{
+Buddana, A. and  Kozubowski, T. J. (2014). Discrete Pareto distribution. Journal of Economics and Quality Control, 29(2):143-156.
+\url{https://doi.org/10.1515/eqc-2014-0014}
 }

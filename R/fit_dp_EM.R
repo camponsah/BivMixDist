@@ -1,13 +1,22 @@
 #' EM algorithm function for discrete Pareto distribution
 #'
 #' Takes initial guess of parameters in discrete pareto and use Em algorithm to estmate the MLE
-#' @usage
-#' @param data A vector of random sample from discrete pareto distribution
-#' @param delta A shape paramter which must be numeric greater than or equal to 0
-#' @param p A numeric parameter between 0 and 1
-#' @param maxiter Maximum number of iterations
+#'
+#' @param data  vector of random sample from discrete pareto distribution
+#' @param delta shape paramter which must be numeric greater than or equal to 0
+#' @param p  numeric parameter between 0 and 1
+#' @param maxiter maximum number of iterations
 #' @param tol tolerance value
-#' @return A list containg parameter estimates, Deviance and data frame of iteration
+#'
+#' @return  list containg parameter estimates, Deviance and data frame of iteration
+#'
+#' @examples
+#' N<-rdpareto(500, delta=0.2,p=0.6)
+#' fit<-dpareto_em(N,maxiter = 1000)
+#' fit$par
+#'
+#'@references  Amponsah, C. K.,  Kozubowski, T. J. and Panorska (2019). Fitting Discrete Pareto Distribution to data using the EM Algorithm. Unpublished.
+#'
 #' @export
 dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
   N<- data

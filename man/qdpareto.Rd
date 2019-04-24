@@ -11,11 +11,23 @@ qdpareto(prob, delta, p)
 
 \item{delta}{A shape paramter which must be numeric greater than or equal to 0.}
 
-\item{p}{A numeric parameter between 0 and 1}
+\item{p}{A numeric parameter between 0 and 1.}
 }
 \value{
-A vector quantiles
+vector quantiles from discrete pareto distribution.
 }
 \description{
 Quantile function.
+}
+\details{
+qdpareto gives the quantile function.
+}
+\examples{
+q<-rdpareto(seq(0.1,0.6,0.1), delta=0.2,p=0.6)
+q
+
+}
+\references{
+Buddana, A. and  Kozubowski, T. J. (2014). Discrete Pareto distribution. Journal of Economics and Quality Control, 29(2):143-156.
+\url{https://doi.org/10.1515/eqc-2014-0014}
 }

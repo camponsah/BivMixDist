@@ -7,19 +7,31 @@
 pdpareto(q, delta, p, lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
-\item{q}{A vector of quantiles values from discrete pareto distribution.}
+\item{q}{vector of quantiles representing numbers from discrete pareto distribution.}
 
-\item{delta}{A shape paramter which must be numeric greater than or equal to 0.}
+\item{delta}{shape paramter which must be numeric greater than or equal to 0.}
 
-\item{p}{A numeric parameter between 0 and 1}
+\item{p}{numeric parameter between 0 and 1.}
 
-\item{lower.tail}{cummulative probabilities if TRUE otherwise survival probilities}
+\item{lower.tail}{logical; if TRUE (default), probabilities are \eqn{P[N\leq n]}, otherwise, \eqn{$P[N> n]$}.}
 
-\item{log.p}{log probabilities if TRUE}
+\item{log.p}{logical; if TRUE, probabilities p are given as log(p).}
 }
 \value{
 A vector cumulative probabilities
 }
 \description{
 Distribution function.
+}
+\details{
+pdpareto gives the distribution function.
+}
+\examples{
+prob<-pdpareto(seq(1,10,1),delta=0.2,p=0.6)
+prob
+
+}
+\references{
+Buddana, A. and  Kozubowski, T. J. (2014). Discrete Pareto distribution. Journal of Economics and Quality Control, 29(2):143-156.
+\url{https://doi.org/10.1515/eqc-2014-0014}
 }
