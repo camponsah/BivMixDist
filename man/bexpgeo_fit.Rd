@@ -2,7 +2,7 @@
 % Please edit documentation in R/beg_estimation.R
 \name{bexpgeo_fit}
 \alias{bexpgeo_fit}
-\title{The bivariate exponential geometric distrubution (BEG)}
+\title{Fits the bivariate exponential geometric distrubution (BEG) to data}
 \usage{
 bexpgeo_fit(data, level = 0.95)
 }
