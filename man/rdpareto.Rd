@@ -2,7 +2,7 @@
 % Please edit documentation in R/discrete_pareto.R
 \name{rdpareto}
 \alias{rdpareto}
-\title{The Discrete Pareto Distribution}
+\title{The discrete Pareto distribution}
 \usage{
 rdpareto(n, delta, p)
 }
@@ -14,16 +14,16 @@ rdpareto(n, delta, p)
 \item{p}{numeric parameter between 0 and 1.}
 }
 \value{
-vector of sample generate from discrete Pareto distribution.
+vector of samples generate from discrete Pareto distribution.
 }
 \description{
-Random sample generation.
+Random sample generating function for discrete Pareto distribution with parameters \eqn{\delta \ge 0} and p in (0,1).
 }
 \details{
 rdpareto generates random sample from discrete pareto distribution.
 }
 \examples{
-N<-rdpareto(20, delta=0.2,p=0.6)
+N<-rdpareto(20, delta=0.2, p=0.6)
 N
 
 }

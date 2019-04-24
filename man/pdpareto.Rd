@@ -2,7 +2,7 @@
 % Please edit documentation in R/discrete_pareto.R
 \name{pdpareto}
 \alias{pdpareto}
-\title{The Discrete Pareto Distribution}
+\title{The discrete Pareto distribution}
 \usage{
 pdpareto(q, delta, p, lower.tail = TRUE, log.p = FALSE)
 }
@@ -21,7 +21,7 @@ pdpareto(q, delta, p, lower.tail = TRUE, log.p = FALSE)
 A vector cumulative probabilities
 }
 \description{
-Distribution function.
+Distribution function for discrete Pareto distribution with parameters \eqn{\delta \ge 0} and p in (0,1).
 }
 \details{
 pdpareto gives the distribution function.

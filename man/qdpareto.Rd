@@ -2,22 +2,22 @@
 % Please edit documentation in R/discrete_pareto.R
 \name{qdpareto}
 \alias{qdpareto}
-\title{The Discrete Pareto Distribution}
+\title{The discrete Pareto distribution}
 \usage{
 qdpareto(prob, delta, p)
 }
 \arguments{
 \item{prob}{Vector of probabilities.}
 
-\item{delta}{A shape paramter which must be numeric greater than or equal to 0.}
+\item{delta}{shape paramter which must be numeric greater than or equal to 0.}
 
-\item{p}{A numeric parameter between 0 and 1.}
+\item{p}{numeric parameter between 0 and 1.}
 }
 \value{
 vector quantiles from discrete pareto distribution.
 }
 \description{
-Quantile function.
+Quantile function for discrete Pareto distribution with parameters \eqn{\delta \ge 0} and p in (0,1).
 }
 \details{
 qdpareto gives the quantile function.

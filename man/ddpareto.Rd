@@ -2,7 +2,7 @@
 % Please edit documentation in R/discrete_pareto.R
 \name{ddpareto}
 \alias{ddpareto}
-\title{The Discrete Pareto Distribution}
+\title{The discrete Pareto distribution}
 \usage{
 ddpareto(N, delta, p, log.p = FALSE)
 }
@@ -19,7 +19,7 @@ ddpareto(N, delta, p, log.p = FALSE)
 vector representing probabilities \eqn{P(N=n)}.
 }
 \description{
-Probaility mass function.
+Probability mass function for discrete Pareto distribution with parameters \eqn{\delta \ge 0} and p in (0,1).
 }
 \details{
 ddpareto gives the probability mass.

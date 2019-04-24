@@ -1,6 +1,8 @@
 #' EM algorithm function for discrete Pareto distribution
 #'
-#' Takes initial guess of parameters in discrete pareto and use Em algorithm to estmate the MLE
+#' This function computes the parameter estimates for exponential geometric distribution using the EM algorithm.
+#'
+#' Takes initial guess of parameters in discrete pareto and use Em algorithm to estmate the MLE.
 #'
 #' @param data  vector of random sample from discrete pareto distribution
 #' @param delta shape paramter which must be numeric greater than or equal to 0

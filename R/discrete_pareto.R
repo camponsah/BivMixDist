@@ -1,6 +1,6 @@
-#' The Discrete Pareto Distribution
+#' The discrete Pareto distribution
 #'
-#' Random sample generation.
+#' Random sample generating function for discrete Pareto distribution with parameters \eqn{\delta \ge 0} and p in (0,1).
 #'
 #' rdpareto generates random sample from discrete pareto distribution.
 #'
@@ -8,10 +8,10 @@
 #' @param delta  shape paramter which must be numeric greater than or equal to 0.
 #' @param p numeric parameter between 0 and 1.
 #'
-#' @return  vector of sample generate from discrete Pareto distribution.
+#' @return  vector of samples generate from discrete Pareto distribution.
 #'
 #' @examples
-#' N<-rdpareto(20, delta=0.2,p=0.6)
+#' N<-rdpareto(20, delta=0.2, p=0.6)
 #' N
 #'
 #'@references  Buddana, A. and  Kozubowski, T. J. (2014). Discrete Pareto distribution. Journal of Economics and Quality Control, 29(2):143-156.
@@ -24,9 +24,9 @@ rdpareto<-function(n,delta,p){
   return(ceiling(sigma*((1 - u)^(- delta) - 1)))
 }
 
-#' The Discrete Pareto Distribution
+#' The discrete Pareto distribution
 #'
-#' Probaility mass function.
+#' Probability mass function for discrete Pareto distribution with parameters \eqn{\delta \ge 0} and p in (0,1).
 #'
 #' ddpareto gives the probability mass.
 #'
@@ -57,9 +57,9 @@ ddpareto<-function(N,delta,p,log.p=FALSE){
    }
 }
 
-#' The Discrete Pareto Distribution
+#' The discrete Pareto distribution
 #'
-#' Distribution function.
+#' Distribution function for discrete Pareto distribution with parameters \eqn{\delta \ge 0} and p in (0,1).
 #'
 #' pdpareto gives the distribution function.
 #'
@@ -95,15 +95,15 @@ if (lower.tail == TRUE & log.p == FALSE){
   }
 }
 
-#' The Discrete Pareto Distribution
+#' The discrete Pareto distribution
 #'
-#' Quantile function.
+#' Quantile function for discrete Pareto distribution with parameters \eqn{\delta \ge 0} and p in (0,1).
 #'
 #' qdpareto gives the quantile function.
 #'
 #' @param prob Vector of probabilities.
-#' @param delta A shape paramter which must be numeric greater than or equal to 0.
-#' @param p A numeric parameter between 0 and 1.
+#' @param delta  shape paramter which must be numeric greater than or equal to 0.
+#' @param p  numeric parameter between 0 and 1.
 #'
 #' @return  vector quantiles from discrete pareto distribution.
 #'
