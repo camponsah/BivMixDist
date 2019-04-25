@@ -7,7 +7,7 @@
 #' @param data  bivariate vector  (X,N) observations from GMDP model.
 #' @param delta  initial guess of true parameter \eqn{\delta} which is numeric and must be greater than  0 (Default value is 1).
 #' @param p  nitial guess of true parameter p which must be numeric value between 0 and 1 (Default value is 0.5).
-#' @param method method of estimation: eqn{EM=}EM algorithm or eqn{MLE=}maximum likelihood estimation (Default method is EM).
+#' @param method method of estimation: \eqn{EM=}EM algorithm or \eqn{MLE=}maximum likelihood estimation (Default method is EM).
 #'
 #' @return  vector of parameter estimates.
 #'
@@ -53,13 +53,13 @@ gammamixdpareto_fit <- function(data,delta=1, p=0.5, method="EM") ## data has to
   }
   b <- a*mean(N)/mean(X) ## estimate beta
   if(method == "EM"){
-    fit <- dpareto_em(N, maxiter = 1000)
+    fit <- dpareto_em(N)
     delta <- fit$par$delta
     p <- fit$par$p
   }else{
-    fit <- stats:: optim(par = c(delta, p), fn = log.lik.DP)
-    delta <- fit$par[1]
-    p <- fit$par[2]
+    fit <- stats:: nlm(log.lik.DP,p=c(delta, p))
+    delta <- fit$estimate[1]
+    p <- fit$estimate[2]
   }
 
   Output<-data.frame(t(matrix(c(a,b,delta,p))))
