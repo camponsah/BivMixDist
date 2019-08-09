@@ -17,7 +17,7 @@ Testing Exponentiality versus Pareto distribution via likelihood ratio: https://
 
 Discrete Pareto distribution (DP):  https://doi.org/10.1515/eqc-2014-0014
 
-#Installation 
+# Installation 
 ## Install from github using 'devtools'
-# install.packages("devtools")
+## install.packages("devtools")
 devtools::install_github("camponsah/BivMixDist")
