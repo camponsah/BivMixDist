@@ -11,7 +11,7 @@
 #' @return  vector of samples generate from discrete Pareto distribution.
 #'
 #' @examples
-#' N<-rdpareto(20, delta=0.2, p=0.6)
+#' N<-rdpareto(20, delta=0.2, p=0.3)
 #' N
 #'
 #'@references  Buddana, A. and  Kozubowski, T. J. (2014). Discrete Pareto distribution. Journal of Economics and Quality Control, 29(2):143-156.
