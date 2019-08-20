@@ -21,10 +21,10 @@ dpareto_em(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16)
 list containg parameter estimates, Deviance and data frame of iteration
 }
 \description{
-This function computes the parameter estimates for exponential geometric distribution using the EM algorithm.
+This function computes the parameter estimates of discrete Pareto distribution using the EM algorithm.
 }
 \details{
-Takes initial guess of parameters in discrete pareto and use Em algorithm to estmate the MLE.
+Takes initial guess for the parameters in discrete pareto and the algorithm will estmate the MLE.
 }
 \examples{
 N<-rdpareto(500, delta=0.2,p=0.6)
@@ -33,5 +33,5 @@ fit$par
 
 }
 \references{
-Amponsah, C. K.,  Kozubowski, T. J. and Panorska (2019). Fitting Discrete Pareto Distribution to data using the EM Algorithm. Unpublished.
+Amponsah, C. K.,  Kozubowski, T. J. and Panorska (2019). A computational approach to estimation of discrete Pareto parameters. Inprint.
 }

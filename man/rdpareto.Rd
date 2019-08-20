@@ -23,7 +23,7 @@ Random sample generating function for discrete Pareto distribution with paramete
 rdpareto generates random sample from discrete pareto distribution.
 }
 \examples{
-N<-rdpareto(20, delta=0.2, p=0.6)
+N<-rdpareto(20, delta=0.2, p=0.3)
 N
 
 }
