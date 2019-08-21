@@ -86,9 +86,9 @@ dblomaxgeo<- function(data,alpha,beta,p,log.p=FALSE){
 #' \url{https://doi.org/10.1016/j.jkss.2018.04.006}
 #'
 #' @export
-pblomaxgeo<- function(q,alpha,beta,p, lower.tail=TRUE,log.p=FALSE){
-  N<-q[,2]
-  X<-q[,1]
+pblomaxgeo<- function(data,alpha,beta,p, lower.tail=TRUE,log.p=FALSE){
+  N<-data[,2]
+  X<-data[,1]
   M<-NULL
   t=1
   for (i in 1:length(N)) {

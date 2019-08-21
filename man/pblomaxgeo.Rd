@@ -4,9 +4,11 @@
 \alias{pblomaxgeo}
 \title{The bivariate distribution with Lomax and geometric margins (BLG)}
 \usage{
-pblomaxgeo(q, alpha, beta, p, lower.tail = TRUE, log.p = FALSE)
+pblomaxgeo(data, alpha, beta, p, lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
+\item{data}{bivariate vector  (X,N) observations from BLG model.}
+
 \item{alpha}{paramter which must be numeric greater than  0.}
 
 \item{beta}{paramter which must be numeric greater than  0.}
@@ -16,8 +18,6 @@ pblomaxgeo(q, alpha, beta, p, lower.tail = TRUE, log.p = FALSE)
 \item{lower.tail}{logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.}
 
 \item{log.p}{logical; if TRUE, probabilities p are given as log(p).}
-
-\item{data}{bivariate vector  (X,N) observations from BLG model.}
 }
 \value{
 vector of distribution.
