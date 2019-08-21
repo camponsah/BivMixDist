@@ -116,7 +116,6 @@ pbgammageo<- function(data,alpha,beta,p, lower.tail=TRUE,log.p=FALSE){
 }
 
 
-
 #' Fits the bivariate gamma geometric distribution (BGG) to data.
 #'
 #' This function computes the parameter estimates, confidence interval, deviance and covariance matrix of gamma geometric distribution.
@@ -200,4 +199,3 @@ bgammageo_fit <- function(data,level=0.95) ## data has to be a vector (X,N)
   result <- list(Estimates=Output,Deviance=Deviance, Inverse.Fisher.Matrix=J)
   return(result)
 }
-
