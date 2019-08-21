@@ -23,7 +23,7 @@ pblomaxgeo(data, alpha, beta, p, lower.tail = TRUE, log.p = FALSE)
 vector of distribution.
 }
 \description{
-Density function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in [0,1].
+Distribution function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in [0,1].
 }
 \details{
 pblomaxgeo is the distribution function for BLG model.
@@ -35,6 +35,6 @@ den
 
 }
 \references{
-Barreto-Souza, W. (2012). A bivariate distribution with Lomax and geometric margins . Journal of the Korean Statistical Society, 47:405-422.
+Arendarczyk, M. and Kozubowski T. J. and Panorska, A. k. (2018). A bivariate distribution with Lomax and geometric margins . Journal of the Korean Statistical Society, 47:405-422.
 \url{https://doi.org/10.1016/j.jkss.2018.04.006}
 }

@@ -33,6 +33,6 @@ den
 
 }
 \references{
-Barreto-Souza, W. (2012). A bivariate distribution with Lomax and geometric margins . Journal of the Korean Statistical Society, 47:405-422.
+Arendarczyk, M. and Kozubowski T. J. and Panorska, A. k. (2018). A bivariate distribution with Lomax and geometric margins . Journal of the Korean Statistical Society, 47:405-422.
 \url{https://doi.org/10.1016/j.jkss.2018.04.006}
 }

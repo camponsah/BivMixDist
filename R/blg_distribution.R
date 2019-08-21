@@ -1,4 +1,4 @@
-#' bivariate distribution with Lomax and geometric margins (BLG)
+#' The bivariate distribution with Lomax and geometric margins (BLG)
 #'
 #' Random sample generating function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in \[0,1\].
 #'
@@ -15,7 +15,7 @@
 #' data.df<-rblomaxgeo(20,alpha=1.5, beta=2, p=0.6)
 #' data.df
 #'
-#'@references  Barreto-Souza, W. (2012). A bivariate distribution with Lomax and geometric margins . Journal of the Korean Statistical Society, 47:405-422.
+#'@references  Arendarczyk, M. and Kozubowski T. J. and Panorska, A. k. (2018). A bivariate distribution with Lomax and geometric margins . Journal of the Korean Statistical Society, 47:405-422.
 #' \url{https://doi.org/10.1016/j.jkss.2018.04.006}
 #'
 #' @export
@@ -45,7 +45,7 @@ rblomaxgeo<- function(n,alpha,beta,p){
 #' den<-dblomaxgeo(data.df, alpha=1.5, beta=2, p=0.6)
 #' den
 #'
-#'@references  Barreto-Souza, W. (2012). A bivariate distribution with Lomax and geometric margins . Journal of the Korean Statistical Society, 47:405-422.
+#'@references  Arendarczyk, M. and Kozubowski T. J. and Panorska, A. k. (2018). A bivariate distribution with Lomax and geometric margins . Journal of the Korean Statistical Society, 47:405-422.
 #' \url{https://doi.org/10.1016/j.jkss.2018.04.006}
 #'
 #' @export
@@ -64,7 +64,7 @@ dblomaxgeo<- function(data,alpha,beta,p,log.p=FALSE){
 
 #' The bivariate distribution with Lomax and geometric margins (BLG)
 #'
-#' Density function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in \[0,1\].
+#' Distribution function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in \[0,1\].
 #'
 #' pblomaxgeo is the distribution function for BLG model.
 #'
@@ -82,7 +82,7 @@ dblomaxgeo<- function(data,alpha,beta,p,log.p=FALSE){
 #' den<-pblomaxgeo(data.df, alpha=1.5, beta=2, p=0.6)
 #' den
 #'
-#'@references  Barreto-Souza, W. (2012). A bivariate distribution with Lomax and geometric margins . Journal of the Korean Statistical Society, 47:405-422.
+#'@references  Arendarczyk, M. and Kozubowski T. J. and Panorska, A. k. (2018). A bivariate distribution with Lomax and geometric margins . Journal of the Korean Statistical Society, 47:405-422.
 #' \url{https://doi.org/10.1016/j.jkss.2018.04.006}
 #'
 #' @export
