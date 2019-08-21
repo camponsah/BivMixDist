@@ -21,7 +21,7 @@ dblomaxgeo(data, alpha, beta, p, log.p = FALSE)
 vector of densities.
 }
 \description{
-Density function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in \link{0,1}.
+Density function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in [0,1].
 }
 \details{
 dblomaxgeo is the density function for BLG model.

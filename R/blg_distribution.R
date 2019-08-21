@@ -1,6 +1,6 @@
 #' bivariate distribution with Lomax and geometric margins (BLG)
 #'
-#' Random sample generating function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in [0,1].
+#' Random sample generating function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in \[0,1\].
 #'
 #' rblomaxgeo generates random samples from BLG distribution.
 #'
@@ -28,7 +28,7 @@ rblomaxgeo<- function(n,alpha,beta,p){
 
 #' The bivariate distribution with Lomax and geometric margins (BLG)
 #'
-#' Density function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in [0,1].
+#' Density function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in \[0,1\].
 #'
 #' dblomaxgeo is the density function for BLG model.
 #'
@@ -64,7 +64,7 @@ dblomaxgeo<- function(data,alpha,beta,p,log.p=FALSE){
 
 #' The bivariate distribution with Lomax and geometric margins (BLG)
 #'
-#' Density function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in [0,1].
+#' Density function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in \[0,1\].
 #'
 #' pblomaxgeo is the distribution function for BLG model.
 #'
