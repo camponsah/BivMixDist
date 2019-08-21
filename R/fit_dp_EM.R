@@ -42,7 +42,8 @@ dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
   # Intitialize vectors for storing data
   Outi<- NULL; outd<- NULL; outp<-NULL; outD<- NULL; k = 1
   Outi[1]<- 0; outd[1]<- delta; outp[1]<- p; outD[1]<- Deviancenew
-  while((abs(Deviancenew - Devianceold) > tol) & (k <= maxiter)){
+  diff <- Deviancenew - Devianceold
+  while(diff > tol && k < maxiter){
     ### E step
     const<- 1/(gamma(eta)*((gamma_1 + N - 1)^(-eta) - (gamma_1 + N)^(-eta)))
     a<- const * gamma(eta + 1) * ((gamma_1 + N - 1)^(-(eta + 1)) - (gamma_1 + N)^(-(eta + 1)))
@@ -62,6 +63,7 @@ dpareto_em <- function(data, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
     gamma_1<- - 1/(delta*log(1 - p))
     Devianceold<-Deviancenew
     Deviancenew <- log_like(N, delta, p)
+    diff <- Deviancenew - Devianceold
     # Output
     k<- k + 1
     Outi[k]<- k; outd[k]<- delta; outp[k]<- p; outD[k]<- Deviancenew

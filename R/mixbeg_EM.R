@@ -37,8 +37,8 @@ bmixexpgeo_em <- function(data, beta = NULL,q=NULL, K=2, maxiter = 500, tol = 1e
     return(sum(ll))
   }
   #initialize beta and q
-  if (beta==NULL && q==NULL){
-    U<-runif(K)
+  if (is.null(beta) && is.null(q)){
+    U<- stats:: runif(K)
     q<- U/sum(U)
   }
   #extimation of p
@@ -60,7 +60,7 @@ bmixexpgeo_em <- function(data, beta = NULL,q=NULL, K=2, maxiter = 500, tol = 1e
     #### M step
     q<-apply(tau, 1, mean)
 
-    beta<-
+    beta<- 0##############
     p<- p
 
     Devianceold<-Deviancenew
@@ -68,7 +68,7 @@ bmixexpgeo_em <- function(data, beta = NULL,q=NULL, K=2, maxiter = 500, tol = 1e
     # Output
     k<- k + 1
   }
-  result <- list(beta=par, q=q, p=p, log.like=Deviancenew, Iterations=k)
+  result <- list(beta=beta, q=q, p=p, log.like=Deviancenew, Iterations=k)
   return(result)
 }
 
