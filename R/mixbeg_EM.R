@@ -134,7 +134,7 @@ dbmixexpgeo<- function(data,beta,p,q,log.p=FALSE){
       exp(-beta*dat.df[1])*p*(1-p)^(dat.df[2]-1) /gamma(dat.df[2])
     return(pd)
   }
-  M<-apply(data, 1, tau_funct)
+  M<-apply(data, 1, pdf_funct)
   if (log.p == FALSE){
     return(M)
   }else{
@@ -168,20 +168,28 @@ dbmixexpgeo<- function(data,beta,p,q,log.p=FALSE){
 #'
 #' @export
 pbmixexpgeo<- function(data,beta,p,q, lower.tail=TRUE,log.p=FALSE){
-  N<-data[,2]
-  X<-data[,1]
-  S1<- stats:: ppois(N-1,lambda = ((1-p)*beta*X),lower.tail = TRUE)
-  S2<- stats:: ppois(N-1,lambda = (beta*X),lower.tail = FALSE)
-  M<-1-exp(-p*beta*X)*S1 -((1-p)^N)*S2
-  if (lower.tail==FALSE & log.p==TRUE){
+   ## cdf function
+  cdf_funct<-function(dat.df){
+  t <- seq(1,dat.df[2])
+    cdf <- 0
+    for (i in 1 :length(beta)){
+      for(j in t){
+        cdf<- cdf+ sum(pracma::gammainc(beta[i]*dat.df[1],dat.df[2]*j)[3] *q[i]*p*(1-p)^(j-1))
+      }
+    }
+
+    return(cdf)
+  }
+  M<-apply(data, 1, cdf_funct)
+  if (lower.tail==TRUE & log.p==FALSE){
+    return(M)
+  }
+  else if (lower.tail==FALSE & log.p==TRUE){
     M<-log(1-M)
     return(M)
   }
   else if (lower.tail==TRUE & log.p==TRUE){
     M<-log(M)
-    return(M)
-  }
-  else if (lower.tail==TRUE & log.p==FALSE){
     return(M)
   }
   else {
