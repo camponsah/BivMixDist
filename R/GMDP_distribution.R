@@ -140,7 +140,7 @@ pgammamixdpareto<- function(data,alpha,beta,delta,p, lower.tail=TRUE,log.p=FALSE
 #' @param data  bivariate vector  (X,N) observations from GMDP model.
 #' @param delta  initial guess of true parameter \eqn{\delta} which is numeric and must be greater than  0 (Default value is 1).
 #' @param p  nitial guess of true parameter p which must be numeric value between 0 and 1 (Default value is 0.5).
-#' @param method method of estimation: \eqn{EM=}EM algorithm or \eqn{MLE=}maximum likelihood estimation (Default method is EM).
+#' @param method method of estimation for discrete Pareto parameter: \eqn{EM=}EM algorithm or \eqn{MLE=}maximum likelihood estimation (Default method is EM).
 #'
 #' @return  vector of parameter estimates.
 #'
@@ -153,13 +153,14 @@ pgammamixdpareto<- function(data,alpha,beta,delta,p, lower.tail=TRUE,log.p=FALSE
 #' \url{https://scholarworks.unr.edu/bitstream/handle/11714/2065/Amponsah_unr_0139M_12378.pdf?sequence=1&isAllowed=y}
 #'
 #' @export
-gammamixdpareto_fit <- function(data,delta=1, p=0.5, method="EM")
+gammamixdpareto_fit <- function(data,delta=1, p=0.5, method="MLE")
 {
   if (is.numeric(data[,1]) && is.numeric(data[,2])){
     N <- as.integer(data[,2])
     X<- as.double(data[,1])
   }
   else stop("all entries of argument 'data' must be numeric")
+  method <- match.arg(method)
   n <- length(N)
   ### Log likelihood function
   log.lik <- function(par) {
@@ -185,14 +186,14 @@ gammamixdpareto_fit <- function(data,delta=1, p=0.5, method="EM")
     #message("MLE of alpha does not exist!")
   }
   b <- a*mean(N)/mean(X) ## estimate beta
-  if(method == "EM"){
-    fit <- dpareto_em(N)
-    delta <- fit$par$delta
-    p <- fit$par$p
-  }else{
+  if(method == "MLE"){
     fit <- stats:: nlm(log.lik.DP,p=c(delta, p))
     delta <- fit$estimate[1]
     p <- fit$estimate[2]
+  }else{
+    fit <- dpareto_em(N)
+    delta <- fit$par$delta
+    p <- fit$par$p
   }
 
   Output<-data.frame(t(matrix(c(a,b,delta,p))))
