@@ -22,3 +22,5 @@ Discrete Pareto distribution (DP):  https://doi.org/10.1515/eqc-2014-0014
 install.packages("devtools")
 
 devtools::install_github("camponsah/BivMixDist")
+
+library(BivMixDist)
