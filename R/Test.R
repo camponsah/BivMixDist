@@ -5,9 +5,6 @@
 #' expPareto_test is the function for testing exponential vs. Pareto type II distrbutions
 #'
 #' @param X data-vector.
-#' @param alpha paramter which must be numeric greater than  0.
-#' @param beta  paramter which must be numeric greater than  0.
-#' @param p numeric parameter between 0 and 1.
 #'
 #' @return  vector of samples generate from BLG distribution.
 #'
@@ -34,7 +31,7 @@ expPareto_test <- function(X)
   statistic <- sum(X^2)/(sum(X))^2
   #p-value calculation
   z <-  sqrt(n)*( ((n*statistic)/2) -1 )
-  p_value<- pnorm(z,lower.tail = FALSE)
+  p_value<- stats:: pnorm(z,lower.tail = FALSE)
   ###Output
   result<-list(statistic=statistic, p.value=p_value, alternative="greater", data.name=data_name,
                method=test)

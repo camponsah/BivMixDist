@@ -11,7 +11,8 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     stats,
-    pracma
+    pracma,
+    Renext
 Roxygen: list(markdown=TRUE)
 RoxygenNote: 6.1.1
 Suggests:

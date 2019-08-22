@@ -8,12 +8,6 @@ expPareto_test(X)
 }
 \arguments{
 \item{X}{data-vector.}
-
-\item{alpha}{paramter which must be numeric greater than  0.}
-
-\item{beta}{paramter which must be numeric greater than  0.}
-
-\item{p}{numeric parameter between 0 and 1.}
 }
 \value{
 vector of samples generate from BLG distribution.
