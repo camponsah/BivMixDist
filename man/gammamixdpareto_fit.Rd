@@ -4,7 +4,7 @@
 \alias{gammamixdpareto_fit}
 \title{Fits the gamma mixture distcrete Pareto distribution (GMDP) to data.}
 \usage{
-gammamixdpareto_fit(data, delta = 1, p = 0.5, method = "EM")
+gammamixdpareto_fit(data, delta = 1, p = 0.5, method = "MLE")
 }
 \arguments{
 \item{data}{bivariate vector  (X,N) observations from GMDP model.}
@@ -13,7 +13,7 @@ gammamixdpareto_fit(data, delta = 1, p = 0.5, method = "EM")
 
 \item{p}{nitial guess of true parameter p which must be numeric value between 0 and 1 (Default value is 0.5).}
 
-\item{method}{method of estimation: \eqn{EM=}EM algorithm or \eqn{MLE=}maximum likelihood estimation (Default method is EM).}
+\item{method}{method of estimation for discrete Pareto parameter: \eqn{EM=}EM algorithm or \eqn{MLE=}maximum likelihood estimation (Default method is EM).}
 }
 \value{
 vector of parameter estimates.

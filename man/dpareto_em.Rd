@@ -7,6 +7,8 @@
 dpareto_em(N, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16)
 }
 \arguments{
+\item{N}{vector of random sample from discrete pareto distribution}
+
 \item{delta}{shape paramter which must be numeric greater than or equal to 0}
 
 \item{p}{numeric parameter between 0 and 1}
@@ -14,8 +16,6 @@ dpareto_em(N, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16)
 \item{maxiter}{maximum number of iterations}
 
 \item{tol}{tolerance value}
-
-\item{data}{vector of random sample from discrete pareto distribution}
 }
 \value{
 list containg parameter estimates, Deviance and data frame of iteration

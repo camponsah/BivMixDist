@@ -122,32 +122,13 @@ qdpareto<-function(prob,delta,p){
 
 
 
-#' Get the intial parameters for discrete Pareto EM-algorithm
-#'
-#' Initial parameter estimates
-#'
-#' qdpareto gives the quantile function.
-#'
-#' @param N data-vector.
-#' @param delta  shape paramter which must be numeric greater than or equal to 0.
-#' @param p  numeric parameter between 0 and 1.
-#'
-#' @return  Initial parameter estimates for discrete pareto distribution.
-#'
-qdpareto_int<-function(N,delta,p){
-  sigma <- - 1/(delta*log(1 - p))
-  return(ceiling(sigma*((1-  prob)^(- delta) - 1)))
-}
-
-
-
 #' EM algorithm function for discrete Pareto distribution
 #'
 #' This function computes the parameter estimates of discrete Pareto distribution using the EM algorithm.
 #'
 #' Takes initial guess for the parameters in discrete pareto and the algorithm will estmate the MLE.
 #'
-#' @param data  vector of random sample from discrete pareto distribution
+#' @param N  vector of random sample from discrete pareto distribution
 #' @param delta shape paramter which must be numeric greater than or equal to 0
 #' @param p  numeric parameter between 0 and 1
 #' @param maxiter maximum number of iterations
