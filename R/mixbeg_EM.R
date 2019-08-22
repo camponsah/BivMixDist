@@ -185,10 +185,10 @@ bmixexpgeo_em <- function(data, beta =NULL,q=NULL, K=2, maxiter = 500, tol = 1e-
     tau<-apply(data, 1, tau_funct)
     #### M step
     q<-apply(tau, 1, mean)
-
-    beta<- 1##############
+    b1<-t(tau)*data[,2]
+    b2<- t(tau)*data[,1]
+    beta<- apply(b1 , 2, mean)/apply(b2 , 2, mean)
     p<- p
-
     Devianceold<-Deviancenew
     Deviancenew <- log_like(data,beta,p,q)
     # Output
