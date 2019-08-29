@@ -152,26 +152,26 @@ bmixexpgeo_em <- function(data, beta =NULL,q=NULL, k=2, maxiter = 1000,
   N <- data[,2]
   X<- data[,1]
   n <- length(N)
-  fit <- bmixexpgeo.init(X=data,beta = beta, q=q, k=k)
+  fit <- bmixexpgeo.init(data,beta = beta, q=q, k=k)
   beta <- fit$beta
   q <- fit$q
   p<-1/mean(N)
-  dens<- function(beta,p,q){
+  dens<- function(beta,q){
     pd<-NULL
     for(i in 1:k){
      pd<- cbind(pd, stats::dgamma(X,shape = N,rate = beta[i])* q[i]* p* (1-p)^(N-1))
     }
     return(pd)
-    }
-  ll.old <- sum(log(apply(dens(beta = beta,p=p,q=q),1,sum)))
+  }
+  ll.old <- sum(log(apply(dens(beta = beta,q=q),1,sum)))
   diff <- 1 + tol
   it <- 0
   while(diff > tol && it < maxiter){
-    z <- dens(beta = beta,p=p,q=q)
+    z <- dens(beta = beta,q=q)
     tau<- z/apply(z, 1, sum)
     q<-apply(tau, 2, mean)
-    beta<- apply(N *tau, 2, sum)/apply(X *tau, 2, sum)
-    ll.new <- sum(log(apply(dens(beta = beta,p=p,q=q),1,sum)))
+    beta<- apply(N *tau, 2, mean)/apply(X *tau, 2, mean)
+    ll.new <- sum(log(apply(dens(beta = beta,q=q),1,sum)))
     diff <- ll.new - ll.old
     ll.old <- ll.new
     it <- it +1
