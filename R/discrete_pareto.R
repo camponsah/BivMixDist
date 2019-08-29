@@ -133,6 +133,7 @@ qdpareto<-function(prob,delta,p){
 #' @param p  numeric parameter between 0 and 1
 #' @param maxiter maximum number of iterations
 #' @param tol tolerance value
+#' @param verb If TRUE, estimates are printed during each iteration.
 #'
 #' @return  list containg parameter estimates, Deviance and data frame of iteration
 #'
@@ -144,31 +145,25 @@ qdpareto<-function(prob,delta,p){
 #'@references  Amponsah, C. K.,  Kozubowski, T. J. and Panorska (2019). A computational approach to estimation of discrete Pareto parameters. Inprint.
 #'
 #' @export
-dpareto_em <- function(N, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
+dpareto_em <- function(N, delta = 1, p = 0.5, maxiter = 1000,
+                       tol = 1e-16, verb=FALSE){
   n <- length(N)
-  if (is.numeric(N))
-    N <- as.integer(N)
-  else stop("argument 'N' must be numeric")
+  if (!is.numeric(N)) stop("argument 'N' must be numeric")
   gamma_1<- - 1/(delta*log(1 - p))
   eta<- 1/delta
-  # log-likelihood for discrete Pareto
-  log_like<- function(N, delta, p){
+  log_like<- function(delta, p){
     W1<- (1 - delta*(N - 1)*log(1 - p))^( - 1/delta)
     W2<- (1 - delta*N*log(1 - p))^( - 1/delta)
     return(sum(log( W1 - W2)+tol))
   }
-  # Function to optimize to eta
   func_eta<-function(eta){
     ll<- eta*log(eta) - lgamma(eta)- eta - eta*log(mean(a)) + eta*mean(c)
     return( -ll)
   }
-  # log-liklihood calcultion
-  Devianceold<- 0
-  Deviancenew <- log_like(N, delta, p)
-  # Intitialize vectors for storing data
-  Outi<- NULL; outd<- NULL; outp<-NULL; outD<- NULL; k = 1
-  Outi[1]<- 0; outd[1]<- delta; outp[1]<- p; outD[1]<- Deviancenew
-  diff <- Deviancenew - Devianceold
+  ll_old <- log_like(delta, p)
+  k = 0
+  output <- c(k,delta, p, ll_old)
+  diff <- tol +1
   while(diff > tol && k < maxiter){
     ### E step
     const<- 1/(gamma(eta)*((gamma_1 + N - 1)^(-eta) - (gamma_1 + N)^(-eta)))
@@ -179,7 +174,8 @@ dpareto_em <- function(N, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
     #### M step
     constant<-mean(c)-log(mean(a))
     if(constant<0){
-      eta <-stats:: nlm(f=func_eta,p=eta, ndigit = 12)$estimate
+      eta=try(suppressWarnings(nlm(f=func_eta,p=eta, ndigit = 12)$estimate),
+              silent=TRUE)
     }
     else{
       eta <- Inf
@@ -187,18 +183,24 @@ dpareto_em <- function(N, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16){
     delta<- 1/eta
     p<- 1 - exp( - mean(a))
     gamma_1<- - 1/(delta*log(1 - p))
-    Devianceold<-Deviancenew
-    Deviancenew <- log_like(N, delta, p)
-    diff <- Deviancenew - Devianceold
-    # Output
+    ll_old <- ll_new
+    ll_new <- log_like(delta, p)
+    diff <- ll_new - ll_old
     k<- k + 1
-    Outi[k]<- k; outd[k]<- delta; outp[k]<- p; outD[k]<- Deviancenew
+    output <- rbind(output, c(k, delta, p, ll_new))
+    if (verb) {
+      cat("iteration =", k, " log.lik.diff =", diff, " log.lik =",
+          ll_new, "\n")
+    }
   }
-  Output <- data.frame(Outi,outd,outp,outD)
-  names(Output) <- c("iteration","delta","p","log-lik values")
+  if (k == maxiter) {
+    cat("WARNING! NOT CONVERGENT!", "\n")
+  }
+  output <- data.frame(output)
+  colnames(output) <- c("iteration","delta","p","log-lik")
   par<-data.frame(t(c(delta,p)))
   colnames(par)<-c("delta","p")
-  result <- list(par=par, Deviance=Deviancenew, data=Output)
+  result <- list(par=par, log.like=ll_new, iterations=k, output=output)
   return(result)
 }
 
