@@ -146,7 +146,7 @@ qdpareto<-function(prob,delta,p){
 #'
 #' @export
 dpareto_em <- function(N, delta = 1, p = 0.5, maxiter = 1000,
-                       tol = 1e-16, verb=FALSE){
+                       tol = 1e-8, verb=FALSE){
   n <- length(N)
   if (!is.numeric(N)) stop("argument 'N' must be numeric")
   gamma_1<- - 1/(delta*log(1 - p))
@@ -183,9 +183,9 @@ dpareto_em <- function(N, delta = 1, p = 0.5, maxiter = 1000,
     delta<- 1/eta
     p<- 1 - exp( - mean(a))
     gamma_1<- - 1/(delta*log(1 - p))
-    ll_old <- ll_new
     ll_new <- log_like(delta, p)
     diff <- ll_new - ll_old
+    ll_old <- ll_new
     k<- k + 1
     output <- rbind(output, c(k, delta, p, ll_new))
     if (verb) {
@@ -194,7 +194,7 @@ dpareto_em <- function(N, delta = 1, p = 0.5, maxiter = 1000,
     }
   }
   if (k == maxiter) {
-    cat("WARNING! NOT CONVERGENT!", "\n")
+    cat("Warning! Convergence not achieved!", "\n")
   }
   output <- data.frame(output)
   colnames(output) <- c("iteration","delta","p","log-lik")
