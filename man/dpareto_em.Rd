@@ -4,7 +4,8 @@
 \alias{dpareto_em}
 \title{EM algorithm function for discrete Pareto distribution}
 \usage{
-dpareto_em(N, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16)
+dpareto_em(N, delta = 1, p = 0.5, maxiter = 1000, tol = 1e-08,
+  verb = FALSE)
 }
 \arguments{
 \item{N}{vector of random sample from discrete pareto distribution}
@@ -16,6 +17,8 @@ dpareto_em(N, delta = 1, p = 0.5, maxiter = 500, tol = 1e-16)
 \item{maxiter}{maximum number of iterations}
 
 \item{tol}{tolerance value}
+
+\item{verb}{If TRUE, estimates are printed during each iteration.}
 }
 \value{
 list containg parameter estimates, Deviance and data frame of iteration

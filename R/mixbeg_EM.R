@@ -22,7 +22,7 @@ rbmixexpgeo<- function(n,beta,p,q){
   N<- stats:: rgeom(n,p)+1
   u<- stats:: runif(n)
   q<-cumsum(q)
-  indx<-findInterval(u,q)
+  indx<-findInterval(u,q)+1
   X<- stats:: rgamma(n,shape =N,rate = beta[c(indx)] )
   return(data.frame(X,N))
 }
@@ -54,12 +54,12 @@ rbmixexpgeo<- function(n,beta,p,q){
 dbmixexpgeo<- function(data,beta,p,q,log.p=FALSE){
   N<-data[,2]
   X<-data[,1]
-  pdf_funct<-function(dat.df){
+  dens<-function(dat.df){
     pd<- q*(beta^dat.df[2])*(dat.df[1]^(dat.df[2]-1)) *
       exp(-beta*dat.df[1])*p*(1-p)^(dat.df[2]-1) /gamma(dat.df[2])
     return(pd)
   }
-  M<-apply(data, 1, pdf_funct)
+  M<-apply(data, 1, dens)
   if (log.p == FALSE){
     return(M)
   }else{
@@ -144,7 +144,7 @@ pbmixexpgeo<- function(data,beta,p,q, lower.tail=TRUE,log.p=FALSE){
 #' fit<-bmixexpgeo_em(data.df,k=2)
 #' fit$par
 #'
-#'@references  Amponsah, C. K.,  Kozubowski, T. J. and Panorska (2019). A computational approach to estimation of discrete Pareto parameters. Inprint.
+#'@references  Amponsah, C. K. and Kozubowski, T.J., and Panorska, A.K. (2020). A Mixed bivariate distribution with mixture exponential and geometric marginals. Inprint.
 #'
 #' @export
 bmixexpgeo_em <- function(data, beta =NULL,q=NULL, k=2, maxiter = 1000,
