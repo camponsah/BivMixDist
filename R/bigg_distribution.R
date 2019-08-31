@@ -30,11 +30,11 @@ rbinvgaussgeo<- function(n,mu,phi,p){
 #'
 #' Density function for bivariate inverse-Gaussian geometric distribution with parameters \eqn{\mu >0, \phi > 0} and p in (0,1).
 #'
-#' dbinvgaussgeo is the density function for BGG model.
+#' dbinvgaussgeo is the density function for BIGG model.
 #'
-#' @param data  bivariate vector  (X,N) observations from BGG model.
-#' @param mu  shape paramter which must be numeric greater than  0.
-#' @param phi  scale paramter which must be numeric greater than  0.
+#' @param data  bivariate vector  (X,N) observations from BIGG model.
+#' @param mu  mean paramter which must be numeric greater than  0.
+#' @param phi  shape paramter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
@@ -42,7 +42,7 @@ rbinvgaussgeo<- function(n,mu,phi,p){
 #'
 #' @examples
 #' data.df<-rbinvgaussgeo(20,mu=1.5, phi=2, p=0.6)
-#' den<-rbinvgaussgeo(20,mu=1.5, phi=2, p=0.6)
+#' den<-rbinvgaussgeo(data.df,mu=1.5, phi=2, p=0.6)
 #' den
 #'
 #'@references  Barreto-Souza, W. and Silva R. B., (2019). A bivariate infinitely divisible law for modeling the magnitude and duration of monotone periods of log-returns . Statistica Neerlandica, 73:211-233.
@@ -67,9 +67,9 @@ dbinvgaussgeo<- function(data,mu,phi,p,log.p=FALSE){
 #'
 #' pbinvgaussgeo is the distribution function for BIGG model.
 #'
-#' @param data  bivariate vector  (X,N) observations from BGG model.
-#' @param mu  shape paramter which must be numeric greater than  0.
-#' @param phi  scale paramter which must be numeric greater than  0.
+#' @param data  bivariate vector  (X,N) observations from BIGG model.
+#' @param mu  mean paramter which must be numeric greater than  0.
+#' @param phi  shape paramter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
@@ -89,7 +89,7 @@ pbinvgaussgeo<- function(data,mu,phi,p, lower.tail=TRUE,log.p=FALSE){
   cdf<-function(y){
     j <- seq(1:y[2])
     a <- p*((1-p)^j)
-    b <-   pnorm(sqrt(phi/y[1])*((y[1]/mu)-j))
+    b <-  stats:: pnorm(sqrt(phi/y[1])*((y[1]/mu)-j))
     c <- exp(2*phi/mu)*pnorm(-sqrt(phi/y[1])*((y[1]/mu)+j))
     return(a*(b+c))
   }
@@ -140,9 +140,12 @@ binvgaussgeo_fit <- function(data,level=0.95)
   qz<- stats:: qnorm(qt)
   z<- abs(qz)
   mu <- mean(X)/mean(N)
-  phi <- n*mu/sum((X-mu*N)^2 /X)
+  phi <- n*mu^2/sum((X-mu*N)^2 /X)
   p <- 1/mean(N)
-  kpp <- 1/(p*p*(1-p))
+  kmu <- (p*mu^3)/(phi)
+  kphi <- 2*phi
+  kpp <- (p*p*(1-p))
+  J <- rbind(c(kmu,0,0), c(0,kphi,0),c(0,0,kpp))
   colnames(J) <- c("mu","phi","p")
   row.names(J) <- c("mu","phi","p")
   lowermu <- mu - z*sqrt((p*mu^3)/(n*phi))
@@ -152,10 +155,10 @@ binvgaussgeo_fit <- function(data,level=0.95)
   upperphi <- phi + z*sqrt(2*phi/n)
   upperp <- p + z*sqrt(p*p*(1-p)/n)
   Deviance<- -2*sum(log(dbinvgaussgeo(data,mu,phi,p)))
-  Output<-data.frame(matrix(c(mu,phi,p)),matrix(c(lowermu,lowerphi,lowerp)),matrix(c(uppermu,upperphi,upperp)))
+  Output<-rbind(c(mu,lowermu,uppermu), c(phi,lowerphi,upperphi),c(p,lowerp,upperp))
   colnames(Output)<-c("estimate",paste(level*100,"%", " lower bound", sep=""),
                       paste(level*100,"%", " upper bound", sep=""))
-  row.names(Output)<- c("alpha","beta","p")
+  row.names(Output)<- c("mu","phi","p")
   result <- list(Estimates=Output,Deviance=Deviance, Inverse.Fisher.Matrix=J)
   return(result)
 }

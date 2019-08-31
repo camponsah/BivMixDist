@@ -16,7 +16,7 @@ rbinvgaussgeo(n, mu, phi, p)
 \item{p}{numeric parameter between 0 and 1.}
 }
 \value{
-vector of samples generate from BGG distribution.
+vector of samples generate from BIGG distribution.
 }
 \description{
 Random sample generating function for bivariate inverse-Gaussian geometric distribution with parameters \eqn{\mu >0, \phi > 0} and p in (0,1).

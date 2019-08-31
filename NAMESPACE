@@ -2,6 +2,7 @@
 
 export(bexpgeo_fit)
 export(bgammageo_fit)
+export(binvgaussgeo_fit)
 export(bmixexpgeo.init)
 export(bmixexpgeo_em)
 export(dbexpgeo)

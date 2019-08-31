@@ -7,11 +7,11 @@
 pbinvgaussgeo(data, mu, phi, p, lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
-\item{data}{bivariate vector  (X,N) observations from BGG model.}
+\item{data}{bivariate vector  (X,N) observations from BIGG model.}
 
-\item{mu}{shape paramter which must be numeric greater than  0.}
+\item{mu}{mean paramter which must be numeric greater than  0.}
 
-\item{phi}{scale paramter which must be numeric greater than  0.}
+\item{phi}{shape paramter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 
@@ -26,12 +26,12 @@ vector of distribution.
 Distribution function for bivariate inverse-Gaussian geometric distribution with parameters \eqn{\mu >0, \phi > 0} and p in (0,1).
 }
 \details{
-pbgammageo is the distribution function for BGG model.
+pbinvgaussgeo is the distribution function for BIGG model.
 }
 \examples{
-data.df<-rbgammageo(20, alpha=1.5, beta=2, p=0.6)
-den<-pbgammageo(data.df, alpha=1.5, beta=2, p=0.6)
-den
+data.df<-rbinvgaussgeo(20,mu=1.5, phi=2, p=0.6)
+prob<-pbinvgaussgeo(data.df,mu=1.5, phi=2, p=0.6)
+prob
 
 }
 \references{

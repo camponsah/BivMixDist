@@ -7,11 +7,11 @@
 dbinvgaussgeo(data, mu, phi, p, log.p = FALSE)
 }
 \arguments{
-\item{data}{bivariate vector  (X,N) observations from BGG model.}
+\item{data}{bivariate vector  (X,N) observations from BIGG model.}
 
-\item{mu}{shape paramter which must be numeric greater than  0.}
+\item{mu}{mean paramter which must be numeric greater than  0.}
 
-\item{phi}{scale paramter which must be numeric greater than  0.}
+\item{phi}{shape paramter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 
@@ -24,11 +24,11 @@ vector of densities.
 Density function for bivariate inverse-Gaussian geometric distribution with parameters \eqn{\mu >0, \phi > 0} and p in (0,1).
 }
 \details{
-dbinvgaussgeo is the density function for BGG model.
+dbinvgaussgeo is the density function for BIGG model.
 }
 \examples{
 data.df<-rbinvgaussgeo(20,mu=1.5, phi=2, p=0.6)
-den<-rbinvgaussgeo(20,mu=1.5, phi=2, p=0.6)
+den<-rbinvgaussgeo(data.df,mu=1.5, phi=2, p=0.6)
 den
 
 }
