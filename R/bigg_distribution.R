@@ -9,7 +9,7 @@
 #' @param phi  scale paramter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #'
-#' @return  vector of samples generate from BGG distribution.
+#' @return  vector of samples generate from BIGG distribution.
 #'
 #' @examples
 #' data.df<-rbinvgaussgeo(20,mu=1.5, phi=2, p=0.6)
@@ -65,7 +65,7 @@ dbinvgaussgeo<- function(data,mu,phi,p,log.p=FALSE){
 #'
 #' Distribution function for bivariate inverse-Gaussian geometric distribution with parameters \eqn{\mu >0, \phi > 0} and p in (0,1).
 #'
-#' pbgammageo is the distribution function for BGG model.
+#' pbinvgaussgeo is the distribution function for BIGG model.
 #'
 #' @param data  bivariate vector  (X,N) observations from BGG model.
 #' @param mu  shape paramter which must be numeric greater than  0.
@@ -77,9 +77,9 @@ dbinvgaussgeo<- function(data,mu,phi,p,log.p=FALSE){
 #' @return  vector of distribution.
 #'
 #' @examples
-#' data.df<-rbgammageo(20, alpha=1.5, beta=2, p=0.6)
-#' den<-pbgammageo(data.df, alpha=1.5, beta=2, p=0.6)
-#' den
+#' data.df<-rbinvgaussgeo(20,mu=1.5, phi=2, p=0.6)
+#' prob<-pbinvgaussgeo(data.df,mu=1.5, phi=2, p=0.6)
+#' prob
 #'
 #'@references  Barreto-Souza, W. and Silva R. B. (2019). A bivariate infinitely divisible law for modeling the magnitude and duration of monotone periods of log-returns . Statistica Neerlandica, 73:211-233.
 #' \url{https://doi.org/10.1111/stan.12166}
@@ -115,23 +115,23 @@ pbinvgaussgeo<- function(data,mu,phi,p, lower.tail=TRUE,log.p=FALSE){
 #'
 #' This function computes the parameter estimates, confidence interval, deviance and covariance matrix of bivariate inverse-Gaussian geometric distribution.
 #''
-#' bgammageo_fit BGG model to data.
+#' binvgaussgeo_fit BIGG model to data.
 #'
-#' @param data  bivariate vector  (X,N) observations from BGG model.
+#' @param data  bivariate vector  (X,N) observations from BIGG model.
 #' @param level confidence level espressed between 0 and 1 (Default is 0.95).
 #'
 #' @return  list of parameter estimates, confidence interval, deviance and covariance matrix.
 #'
 #' @examples
-#' Data.df<- rbgammageo(200,alpha=1.5, beta=2, p=0.6)
-#' fit <- bgammageo_fit(Data.df)
+#' Data.df <- rbinvgaussgeo(50,mu=1.5, phi=2, p=0.6)
+#' fit <- binvgaussgeo_fit(Data.df)
 #' fit
 #'
 #'@references  Barreto-Souza, W. and Silva R. B. (2019). A bivariate infinitely divisible law for modeling the magnitude and duration of monotone periods of log-returns . Statistica Neerlandica, 73:211-233.
 #' \url{https://doi.org/10.1111/stan.12166}
 #'
 #' @export
-bgammageo_fit <- function(data,level=0.95) ## data has to be a vector (X,N)
+binvgaussgeo_fit <- function(data,level=0.95)
 {
   N<-data[,2]
   X<-data[,1]
