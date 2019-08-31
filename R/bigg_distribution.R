@@ -21,7 +21,7 @@
 #' @export
 rbinvgaussgeo<- function(n,mu,phi,p){
   N<- stats:: rgeom(n,p)+1
-  X<- statmod:: rinvgauss(n,mean = N*mu, shape =  phi*N^2)
+  X<- statmod:: rinvgauss(n,mean = N*mu, shape =phi*N^2)
   return(data.frame(X,N))
 }
 
@@ -52,7 +52,7 @@ rbinvgaussgeo<- function(n,mu,phi,p){
 dbinvgaussgeo<- function(data,mu,phi,p,log.p=FALSE){
   N<-data[,2]
   X<-data[,1]
-  M<- statmod:: dinvgauss(X,mean = N*mu, shape =  phi*N^2)*p*((1-p)^(N-1))
+  M<- statmod:: dinvgauss(X,mean = N*mu, shape =phi*N^2)*p*((1-p)^(N-1))
   if (log.p == FALSE){
     return(M)
   }else{
@@ -91,7 +91,7 @@ pbinvgaussgeo<- function(data,mu,phi,p, lower.tail=TRUE,log.p=FALSE){
     a <- p*((1-p)^j)
     b <-  stats:: pnorm(sqrt(phi/y[1])*((y[1]/mu)-j))
     c <- exp(2*phi/mu)*pnorm(-sqrt(phi/y[1])*((y[1]/mu)+j))
-    return(a*(b+c))
+    return(sum(a*(b+c)))
   }
   M <- apply(data,1, cdf)
   if (lower.tail==FALSE & log.p==TRUE){
@@ -135,12 +135,12 @@ binvgaussgeo_fit <- function(data,level=0.95)
 {
   N<-data[,2]
   X<-data[,1]
-  n<-nrow(data)
+  n<-length(N)
   qt<-(1-level)/2
   qz<- stats:: qnorm(qt)
   z<- abs(qz)
   mu <- mean(X)/mean(N)
-  phi <- n*mu^2/sum((X-mu*N)^2 /X)
+  phi <- (n*mu^2)/sum( (X-mu*N)^2 /X)
   p <- 1/mean(N)
   kmu <- (p*mu^3)/(phi)
   kphi <- 2*phi
@@ -154,11 +154,11 @@ binvgaussgeo_fit <- function(data,level=0.95)
   uppermu <- mu + z*sqrt((p*mu^3)/(n*phi))
   upperphi <- phi + z*sqrt(2*phi/n)
   upperp <- p + z*sqrt(p*p*(1-p)/n)
-  Deviance<- -2*sum(log(dbinvgaussgeo(data,mu,phi,p)))
+  log.like<- sum(dbinvgaussgeo(data,mu,phi,p,log.p = TRUE))
   Output<-rbind(c(mu,lowermu,uppermu), c(phi,lowerphi,upperphi),c(p,lowerp,upperp))
   colnames(Output)<-c("estimate",paste(level*100,"%", " lower bound", sep=""),
                       paste(level*100,"%", " upper bound", sep=""))
   row.names(Output)<- c("mu","phi","p")
-  result <- list(Estimates=Output,Deviance=Deviance, Inverse.Fisher.Matrix=J)
+  result <- list(Estimates=Output,log.like=log.like, Inverse.Fisher.Matrix=J)
   return(result)
 }
