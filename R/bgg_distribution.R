@@ -86,19 +86,12 @@ dbgammageo<- function(data,alpha,beta,p,log.p=FALSE){
 #'
 #' @export
 pbgammageo<- function(data,alpha,beta,p, lower.tail=TRUE,log.p=FALSE){
-  N<-data[,2]
-  X<-data[,1]
-  M<-NULL
-  t=1
-  for (i in 1:length(N)) {
-    k=seq(1,N[i])
-    S0<-0
-    for (j in k) {
-      S0<-S0 + p*((1-p)^(j-1))*pracma::gammainc(beta*X[i],j*alpha)[3]
-    }
-    M[t]<- S0
-    t=t+1
+  cdf <- function(y) {
+    j <- seq(1,y[2])
+    S <- p*((1-p)^(j-1))*pracma::gammainc(beta*y[1],j*alpha)[3]
+    return(sum(S))
   }
+  M <- apply(data,1,cdf)
   if (lower.tail==FALSE & log.p==TRUE){
     M<-log(1-M)
     return(M)
