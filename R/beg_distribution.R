@@ -5,10 +5,10 @@
 #' rbexpgeo generates random sample from BEG distribution.
 #'
 #' @param n size of sample.
-#' @param beta  scale paramter which must be numeric greater than  0.
+#' @param beta  numeric paramter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #'
-#' @return  vector of sample generate from BEG model.
+#' @return  vector of random samples generate from BEG model.
 #'
 #' @examples
 #' N<-rbexpgeo(20, beta=2,p=0.6)
@@ -32,7 +32,7 @@ rbexpgeo<- function(n,beta,p){
 #' dbexpgeo is the density  function.
 #'
 #' @param data is bivariate vector  (X,N) vector representing observations from BEG model.
-#' @param beta  scale paramter which must be numeric greater than  0.
+#' @param beta  numeric paramter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
@@ -50,7 +50,7 @@ rbexpgeo<- function(n,beta,p){
 dbexpgeo<- function(data,beta,p,log.p=FALSE){
   N<-data[,2]
   X<-data[,1]
-  M<-(p*beta^N)*((X*(1-p))^(N-1))*exp(-beta*X)/gamma(N)
+  M<-stats:: dgamma(X,shape =N,rate = beta ) *p*(1-p)^N
   if (log.p == FALSE){
     return(M)
   }else{
@@ -67,7 +67,7 @@ dbexpgeo<- function(data,beta,p,log.p=FALSE){
 #' pbexpgeo is the distribution  function.
 #'
 #' @param data is bivariate vector  (X,N) vector representing observations from BEG model.
-#' @param beta  scale paramter which must be numeric greater than 0.
+#' @param beta  numeric paramter which must be numeric greater than 0.
 #' @param p numeric parameter between 0 and 1.
 #' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
@@ -144,13 +144,12 @@ bexpgeo_fit <- function(data,level=0.95) ## data has to be a vector (X,N)
   lowerp<-p-z*sqrt(J[2,2]/n)
   upperb<-b+z*sqrt(J[1,1]/n)
   upperp<-p+z*sqrt(J[2,2]/n)
-  log.like<-log(p)+ N*log(b)-lgamma(N)+(N-1)*log((1-p)*X)-b*X
-  Deviance<- -2*sum(log.like)
+  log.like<- sum(log(dbexpgeo(data = data,beta = b,p=p)))
   Output<-data.frame(matrix(c(b,p)),matrix(c(lowerb,lowerp)),matrix(c(upperb,upperp)))
   colnames(Output)<-c("estimate",paste(level*100,"%", " lower bound", sep=""),
                       paste(level*100,"%", " upper bound", sep=""))
   row.names(Output)<- c("beta","p")
-  result <- list(Estimates=Output,Deviance=Deviance,Inverse.Fisher.Matrix=J)
+  result <- list(Estimates=Output,log.like=log.like,Inverse.Fisher.Matrix=J)
   return(result)
 }
 
