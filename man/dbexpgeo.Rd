@@ -9,7 +9,7 @@ dbexpgeo(data, beta, p, log.p = FALSE)
 \arguments{
 \item{data}{is bivariate vector  (X,N) vector representing observations from BEG model.}
 
-\item{beta}{scale paramter which must be numeric greater than  0.}
+\item{beta}{numeric paramter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 

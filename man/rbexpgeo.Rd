@@ -9,12 +9,12 @@ rbexpgeo(n, beta, p)
 \arguments{
 \item{n}{size of sample.}
 
-\item{beta}{scale paramter which must be numeric greater than  0.}
+\item{beta}{numeric paramter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 }
 \value{
-vector of sample generate from BEG model.
+vector of random samples generate from BEG model.
 }
 \description{
 Random sample generating function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and p in (0,1).

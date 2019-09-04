@@ -9,14 +9,14 @@ rbgammageo(n, alpha, beta, p)
 \arguments{
 \item{n}{size of sample.}
 
-\item{alpha}{shape paramter which must be numeric greater than  0.}
+\item{alpha}{numeric paramter which must be greater than  0.}
 
-\item{beta}{scale paramter which must be numeric greater than  0.}
+\item{beta}{numeric paramter which must be  greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 }
 \value{
-vector of samples generate from BGG distribution.
+vector of random samples generate from BGG distribution.
 }
 \description{
 Random sample generating function for bivariate gamma geometric distribution with parameters \eqn{\alpha >0, \beta > 0} and p in (0,1).

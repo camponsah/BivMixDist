@@ -5,11 +5,11 @@
 #' rbgammageo generates random samples from BGG distribution.
 #'
 #' @param n size of sample.
-#' @param alpha  shape paramter which must be numeric greater than  0.
-#' @param beta  scale paramter which must be numeric greater than  0.
+#' @param alpha  numeric paramter which must be greater than  0.
+#' @param beta  numeric paramter which must be  greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #'
-#' @return  vector of samples generate from BGG distribution.
+#' @return  vector of random samples generate from BGG distribution.
 #'
 #' @examples
 #' data.df<-rbgammageo(20,alpha=1.5, beta=2, p=0.6)
@@ -33,8 +33,8 @@ rbgammageo<- function(n,alpha,beta,p){
 #' dbgammageo is the density function for BGG model.
 #'
 #' @param data  bivariate vector  (X,N) observations from BGG model.
-#' @param alpha  shape paramter which must be numeric greater than  0.
-#' @param beta  scale paramter which must be numeric greater than  0.
+#' @param alpha  numeric paramter which must be  greater than  0.
+#' @param beta  numeric paramter which must be  greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
@@ -50,9 +50,9 @@ rbgammageo<- function(n,alpha,beta,p){
 #'
 #' @export
 dbgammageo<- function(data,alpha,beta,p,log.p=FALSE){
-  N<-data[,2]
-  X<-data[,1]
-  M<-((1-p)^(N-1))*(p*beta^(alpha*N))*(X^(alpha*N-1))*exp(-beta*X)/gamma(alpha*N)
+  N <- data[,2]
+  X <- data[,1]
+  M <- ((1-p)^(N-1))*(p*beta^(alpha*N))*(X^(alpha*N-1))*exp(-beta*X)/gamma(alpha*N)
   if (log.p == FALSE){
     return(M)
   }else{
@@ -68,8 +68,8 @@ dbgammageo<- function(data,alpha,beta,p,log.p=FALSE){
 #' pbgammageo is the distribution function for BGG model.
 #'
 #' @param data  bivariate vector  (X,N) observations from BGG model.
-#' @param alpha  shape paramter which must be numeric greater than  0.
-#' @param beta  scale paramter which must be numeric greater than  0.
+#' @param alpha  numeric paramter which must be  greater than  0.
+#' @param beta  numeric paramter which must be  greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
@@ -133,30 +133,15 @@ bgammageo_fit <- function(data,level=0.95) ## data has to be a vector (X,N)
 {
   N<-data[,2]
   X<-data[,1]
-  n<-nrow(data)
+  n<-length(N)
   qt<-(1-level)/2
   qz<- stats:: qnorm(qt)
   z<- abs(qz)
-  ### Log likelihood function
   log.lik <- function(par) { #par[1]=alpha, par[2]=beta
-    #b=par*mean(N)/mean(X)
     B<-par*mean(N)/mean(X)
     ll<- par*mean(N)*log(B+1e-16)-B*mean(X)+mean(par*N*log(X)-lgamma(par*N))
     return(-ll)
   }
-  ## Estimate alpha
-  V<- stats:: var(X)
-  alpha<- mean(N*((mean(X))^2)/V)
-  constant<- log(mean(N)/mean(X)) + mean(N*log(X/N))/mean(N)
-  if (constant<0){
-    a<- stats:: nlm(log.lik,p=alpha)$estimate
-  }else{
-    a<- Inf
-    message("MLE of alpha does not exist!")
-  }
-  b<-a*mean(N)/mean(X) ## estimate beta
-  p<-1/mean(N) # estimate p
-  ### Sum to infinity function
   sumToInfinity<- function(p,a){
     j=1
     error=1
@@ -169,26 +154,36 @@ bgammageo_fit <- function(data,level=0.95) ## data has to be a vector (X,N)
     }
     return(S1)
   }
-  sigmaaa<- sumToInfinity(p, a)
-  sigmabb<- a/(p*b*b)
-  sigmaab<- -1/(p*b)
-  sigmapp<-1/(p*p*(1-p))
-  J= solve(matrix(c(sigmaaa,sigmaab,0,sigmaab,sigmabb,0,0,0,sigmapp),byrow = 3, ncol = 3))
-  J<-data.frame(J)
-  colnames(J)<- c("alpha","beta","p")
-  row.names(J)<- c("alpha","beta","p")
-  lowera<-a-z*sqrt(J[1,1]/n)
-  lowerb<-b-z*sqrt(J[2,2]/n)
-  lowerp<-p-z*sqrt(J[3,3]/n)
-  uppera<-a+z*sqrt(J[1,1]/n)
-  upperb<-b+z*sqrt(J[2,2]/n)
-  upperp<-p+z*sqrt(J[3,3]/n)
-  log.like<-N*a*log(b)-lgamma(a*N)+(a*N-1)*log(X)-b*X+log(p)+(N-1)*log(1-p)
-  Deviance<- -2*sum(log.like)
-  Output<-data.frame(matrix(c(a,b,p)),matrix(c(lowera,lowerb,lowerp)),matrix(c(uppera,upperb,upperp)))
-  colnames(Output)<-c("estimate",paste(level*100,"%", " lower bound", sep=""),
-                      paste(level*100,"%", " upper bound", sep=""))
-  row.names(Output)<- c("alpha","beta","p")
-  result <- list(Estimates=Output,Deviance=Deviance, Inverse.Fisher.Matrix=J)
-  return(result)
+  V<- stats:: var(X)
+  alpha<- mean(N*((mean(X))^2)/V)
+  constant<- log(mean(N)/mean(X)) + mean(N*log(X/N))/mean(N)
+  if (constant<0){
+    a <- stats:: nlm(log.lik,p=alpha)$estimate
+    b <- a*(mean(N)/mean(X))
+    p <- 1/mean(N)
+    sigmaaa<- sumToInfinity(p, a)
+    sigmabb<- a/(p*b*b)
+    sigmaab<- -1/(p*b)
+    sigmapp<-1/(p*p*(1-p))
+    J= solve(matrix(c(sigmaaa,sigmaab,0,sigmaab,sigmabb,0,0,0,sigmapp),byrow = 3, ncol = 3))
+    J<-data.frame(J)
+    colnames(J)<- c("alpha","beta","p")
+    row.names(J)<- c("alpha","beta","p")
+    lowera<-a-z*sqrt(J[1,1]/n)
+    lowerb<-b-z*sqrt(J[2,2]/n)
+    lowerp<-p-z*sqrt(J[3,3]/n)
+    uppera<-a+z*sqrt(J[1,1]/n)
+    upperb<-b+z*sqrt(J[2,2]/n)
+    upperp<-p+z*sqrt(J[3,3]/n)
+    log.like <- sum(log(dbgammageo(data = data,alpha = a, beta = b, p=p)))
+    Output<-rbind(c(a,lowera,uppera),c(b,lowerb,upperb),c(p,upperp,upperp))
+    colnames(Output)<-c("estimate",paste(level*100,"%", " lower bound", sep=""),
+                        paste(level*100,"%", " upper bound", sep=""))
+    row.names(Output)<- c("alpha","beta","p")
+    result <- list(estimates=Output,log.like=log.like, Inverse.Fisher.Matrix=J)
+    return(result)
+  }else{
+    cat("Warning! MLE of alpha and beta do not exist!", "\n")
+  }
+
 }
