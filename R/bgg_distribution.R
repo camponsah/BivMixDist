@@ -176,7 +176,7 @@ bgammageo_fit <- function(data,level=0.95) ## data has to be a vector (X,N)
     upperb<-b+z*sqrt(J[2,2]/n)
     upperp<-p+z*sqrt(J[3,3]/n)
     log.like <- sum(log(dbgammageo(data = data,alpha = a, beta = b, p=p)))
-    Output<-rbind(c(a,lowera,uppera),c(b,lowerb,upperb),c(p,upperp,upperp))
+    Output<-rbind(c(a,lowera,uppera),c(b,lowerb,upperb),c(p,lowerp,upperp))
     colnames(Output)<-c("estimate",paste(level*100,"%", " lower bound", sep=""),
                         paste(level*100,"%", " upper bound", sep=""))
     row.names(Output)<- c("alpha","beta","p")
