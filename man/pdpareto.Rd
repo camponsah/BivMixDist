@@ -27,7 +27,7 @@ Distribution function for discrete Pareto distribution with parameters \eqn{\del
 pdpareto gives the distribution function.
 }
 \examples{
-prob<-pdpareto(seq(1,10,1),delta=0.2,p=0.6)
+prob<-pdpareto(seq(1,10, 1),delta=0.2,p=0.6)
 prob
 
 }

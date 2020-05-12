@@ -77,28 +77,28 @@ dbgammageo<- function(data,alpha,beta,p,log.p=FALSE){
 #' @return  vector of distribution.
 #'
 #' @examples
-#' data.df<-rbgammageo(20, alpha=1.5, beta=2, p=0.6)
-#' den<-pbgammageo(data.df, alpha=1.5, beta=2, p=0.6)
-#' den
+#' data.df <- rbgammageo(20, alpha=1.5, beta=2, p=0.6)
+#' prob <- pbgammageo(data.df, alpha=1.5, beta=2, p=0.6)
+#' prob
 #'
 #'@references  Barreto-Souza, W. (2012). Bivariate gamma-geometric law and its induced Lévy process . Journal of Multivariate Analysis, 109:130-145.
 #' \url{https://doi.org/10.1016/j.jmva.2012.03.004}
 #'
 #' @export
-pbgammageo<- function(data,alpha,beta,p, lower.tail=TRUE,log.p=FALSE){
+pbgammageo<- function(data, alpha, beta, p, lower.tail=TRUE, log.p=FALSE){
   cdf <- function(y) {
     j <- seq(1,y[2])
-    S <- p*((1-p)^(j-1))*pracma::gammainc(beta*y[1],j*alpha)[3]
-    return(sum(S))
+    for (i in 1:length(j)){
+      S <- pracma:: gammainc(beta*y[1],j[i]*alpha)[3] * p*((1-p)^(j-1))
+      return(sum(S))
+    }
   }
   M <- apply(data,1,cdf)
   if (lower.tail==FALSE & log.p==TRUE){
-    M<-log(1-M)
-    return(M)
+    return(log(1-M))
   }
   else if (lower.tail==TRUE & log.p==TRUE){
-    M<-log(M)
-    return(M)
+    return(log(M))
   }
   else if (lower.tail==TRUE & log.p==FALSE){
     return(M)

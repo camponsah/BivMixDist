@@ -86,11 +86,11 @@ dbinvgaussgeo<- function(data,mu,phi,p,log.p=FALSE){
 #'
 #' @export
 pbinvgaussgeo<- function(data,mu,phi,p, lower.tail=TRUE,log.p=FALSE){
-  cdf<-function(y){
+  cdf <- function(y){
     j <- seq(1:y[2])
     a <- p*((1-p)^j)
     b <-  stats:: pnorm(sqrt(phi/y[1])*((y[1]/mu)-j))
-    c <- exp(2*phi/mu)*pnorm(-sqrt(phi/y[1])*((y[1]/mu)+j))
+    c <-  stats:: pnorm(-sqrt(phi/y[1])*((y[1]/mu)+j)) * exp(2*phi/mu)
     return(sum(a*(b+c)))
   }
   M <- apply(data,1, cdf)

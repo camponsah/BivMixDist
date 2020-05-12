@@ -72,7 +72,7 @@ ddpareto<-function(N,delta,p,log.p=FALSE){
 #' @return A vector cumulative probabilities
 #'
 #' @examples
-#' prob<-pdpareto(seq(1,10,1),delta=0.2,p=0.6)
+#' prob<-pdpareto(seq(1,10, 1),delta=0.2,p=0.6)
 #' prob
 #'
 #'@references  Buddana, A. and  Kozubowski, T. J. (2014). Discrete Pareto distribution. Journal of Economics and Quality Control, 29(2):143-156.
@@ -174,7 +174,7 @@ dpareto_em <- function(N, delta = 1, p = 0.5, maxiter = 1000,
     #### M step
     constant<-mean(c)-log(mean(a))
     if(constant<0){
-      eta=try(suppressWarnings(nlm(f=func_eta,p=eta, ndigit = 12)$estimate),
+      eta=try(suppressWarnings(stats:: nlm(f=func_eta,p=eta, ndigit = 12)$estimate),
               silent=TRUE)
     }
     else{

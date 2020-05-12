@@ -9,9 +9,9 @@ pbgammageo(data, alpha, beta, p, lower.tail = TRUE, log.p = FALSE)
 \arguments{
 \item{data}{bivariate vector  (X,N) observations from BGG model.}
 
-\item{alpha}{numeric paramter which must be greater than  0.}
+\item{alpha}{numeric paramter which must be  greater than  0.}
 
-\item{beta}{numeric paramter which must be  greatr than  0.}
+\item{beta}{numeric paramter which must be  greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 
@@ -29,9 +29,9 @@ Distribution function for bivariate gamma geometric distribution with parameters
 pbgammageo is the distribution function for BGG model.
 }
 \examples{
-data.df<-rbgammageo(20, alpha=1.5, beta=2, p=0.6)
-den<-pbgammageo(data.df, alpha=1.5, beta=2, p=0.6)
-den
+data.df <- rbgammageo(20, alpha=1.5, beta=2, p=0.6)
+prob <- pbgammageo(data.df, alpha=1.5, beta=2, p=0.6)
+prob
 
 }
 \references{
