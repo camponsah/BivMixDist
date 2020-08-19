@@ -21,9 +21,9 @@
 #'
 #' @export
 rgammamixdpareto<- function(n,alpha,beta,delta,p){
-  u<- stats:: runif(n)
-  sigma=-1/(delta*log(1-p))
-  N<-ceiling(sigma*((1-u)^(-delta) -1))
+  rate <- - 1/(delta*log(1 - p))
+  z <- stats:: rgamma(n,shape = 1/delta, rate = rate)
+  N <- sapply(1-exp(-z), rgeom, n=1) +1
   X<- stats:: rgamma(n,shape =alpha*N,rate = beta )
   return(data.frame(X,N))
 }
