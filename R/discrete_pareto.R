@@ -19,9 +19,9 @@
 #'
 #' @export
 rdpareto<-function(n,delta,p){
-  rate <- - 1/(delta*log(1 - p))
-  z <- stats:: rgamma(n,shape = 1/delta, rate = rate)
-  N <- sapply(1-exp(-z), rgeom, n=1) +1
+  u<- stats:: runif(n)
+  sigma<- - 1/(delta*log(1 - p))
+  return(ceiling(sigma*((1 - u)^(- delta) - 1)))
   return(N)
 }
 
