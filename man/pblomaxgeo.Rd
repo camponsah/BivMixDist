@@ -9,9 +9,9 @@ pblomaxgeo(data, alpha, beta, p, lower.tail = TRUE, log.p = FALSE)
 \arguments{
 \item{data}{bivariate vector  (X,N) observations from BLG model.}
 
-\item{alpha}{paramter which must be numeric greater than  0.}
+\item{alpha}{parameter which must be numeric greater than  0.}
 
-\item{beta}{paramter which must be numeric greater than  0.}
+\item{beta}{parameter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 
@@ -24,6 +24,8 @@ vector of distribution.
 }
 \description{
 Distribution function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in [0,1].
+
+[0,1]: R:0,1%5C
 }
 \details{
 pblomaxgeo is the distribution function for BLG model.

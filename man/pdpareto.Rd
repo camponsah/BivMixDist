@@ -7,9 +7,9 @@
 pdpareto(q, delta, p, lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
-\item{q}{vector of quantiles representing numbers from discrete pareto distribution.}
+\item{q}{vector of quantiles representing numbers from discrete Pareto distribution.}
 
-\item{delta}{shape paramter which must be numeric greater than or equal to 0.}
+\item{delta}{shape parameter which must be numeric greater than or equal to 0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 

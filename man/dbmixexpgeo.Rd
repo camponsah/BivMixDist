@@ -9,7 +9,7 @@ dbmixexpgeo(data, beta, p, q, log.p = FALSE)
 \arguments{
 \item{data}{is bivariate vector  (X,N) vector representing observations from BMEG model.}
 
-\item{beta}{vector of scale paramters which must be numeric greater than  0.}
+\item{beta}{vector of scale parameters which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 

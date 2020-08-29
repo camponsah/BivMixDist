@@ -13,15 +13,15 @@ expPareto_test(X)
 vector of samples generate from BLG distribution.
 }
 \description{
-Performs \eqn{H_0:\alpha =0 \quad vs \quad H_0:\alpha =0}.  \eqn{\alpha =0} corresponds to exponetial distribution and \eqn{\alpha >0} corresponds to Pareto type II distribution.
+Performs \eqn{H_0:\alpha =0 \quad vs \quad H_0:\alpha =0}.  \eqn{\alpha =0} corresponds to exponential distribution and \eqn{\alpha >0} corresponds to Pareto type II distribution.
 }
 \details{
-expPareto_test is the function for testing exponential vs. Pareto type II distrbutions
+expPareto_test is the function for testing exponential vs. Pareto type II distributions
 }
 \examples{
 X<- Renext:: rlomax(100,scale = 0.200,shape = 0.5)
 #X<-rexp(300, rate = 1/10)
-test<- expPareto_test
+test<- expPareto_test(X)
 test
 
 }

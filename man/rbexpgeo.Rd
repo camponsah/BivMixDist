@@ -2,14 +2,14 @@
 % Please edit documentation in R/beg_distribution.R
 \name{rbexpgeo}
 \alias{rbexpgeo}
-\title{The bivariate exponential geometric distrubution (BEG)}
+\title{The bivariate exponential geometric distribution (BEG)}
 \usage{
 rbexpgeo(n, beta, p)
 }
 \arguments{
 \item{n}{size of sample.}
 
-\item{beta}{numeric paramter which must be numeric greater than  0.}
+\item{beta}{numeric parameter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 }

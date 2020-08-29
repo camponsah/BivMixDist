@@ -9,7 +9,7 @@ dgeopois(N, lambda, p, log.p = FALSE)
 \arguments{
 \item{N}{A vector of random sample from discrete Pareto.}
 
-\item{lambda}{numeric paramter which must be numeric greater than  0.}
+\item{lambda}{numeric parameter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 

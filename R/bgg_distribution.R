@@ -5,8 +5,8 @@
 #' rbgammageo generates random samples from BGG distribution.
 #'
 #' @param n size of sample.
-#' @param alpha  numeric paramter which must be greater than  0.
-#' @param beta  numeric paramter which must be  greater than  0.
+#' @param alpha  numeric parameter which must be greater than  0.
+#' @param beta  numeric parameter which must be  greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #'
 #' @return  vector of random samples generate from BGG distribution.
@@ -33,8 +33,8 @@ rbgammageo<- function(n,alpha,beta,p){
 #' dbgammageo is the density function for BGG model.
 #'
 #' @param data  bivariate vector  (X,N) observations from BGG model.
-#' @param alpha  numeric paramter which must be  greater than  0.
-#' @param beta  numeric paramter which must be  greater than  0.
+#' @param alpha  numeric parameter which must be  greater than  0.
+#' @param beta  numeric parameter which must be  greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
@@ -68,8 +68,8 @@ dbgammageo<- function(data,alpha,beta,p,log.p=FALSE){
 #' pbgammageo is the distribution function for BGG model.
 #'
 #' @param data  bivariate vector  (X,N) observations from BGG model.
-#' @param alpha  numeric paramter which must be  greater than  0.
-#' @param beta  numeric paramter which must be  greater than  0.
+#' @param alpha  numeric parameter which must be  greater than  0.
+#' @param beta  numeric parameter which must be  greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
@@ -116,7 +116,7 @@ pbgammageo<- function(data, alpha, beta, p, lower.tail=TRUE, log.p=FALSE){
 #' bgammageo_fit BGG model to data.
 #'
 #' @param data  bivariate vector  (X,N) observations from BGG model.
-#' @param level confidence level espressed between 0 and 1 (Default is 0.95).
+#' @param level confidence level expressed between 0 and 1 (Default is 0.95).
 #'
 #' @return  list of parameter estimates, confidence interval, deviance and covariance matrix.
 #'
@@ -125,7 +125,7 @@ pbgammageo<- function(data, alpha, beta, p, lower.tail=TRUE, log.p=FALSE){
 #' fit <- bgammageo_fit(Data.df)
 #' fit
 #'
-#'@references  Barreto-Souza, W. (2012). Bivariate gamma-geometric law and its induced Lévy process . Journal of Multivariate Analysis, 109:130-145.
+#'@references  Barreto-Souza, W. (2012). Bivariate gamma-geometric law and its induced Levy process . Journal of Multivariate Analysis, 109:130-145.
 #' \url{https://doi.org/10.1016/j.jmva.2012.03.004}
 #'
 #' @export

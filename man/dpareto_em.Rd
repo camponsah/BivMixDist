@@ -8,9 +8,9 @@ dpareto_em(N, delta = 1, p = 0.5, maxiter = 1000, tol = 1e-08,
   verb = FALSE)
 }
 \arguments{
-\item{N}{vector of random sample from discrete pareto distribution}
+\item{N}{vector of random sample from discrete Pareto distribution}
 
-\item{delta}{shape paramter which must be numeric greater than or equal to 0}
+\item{delta}{shape parameter which must be numeric greater than or equal to 0}
 
 \item{p}{numeric parameter between 0 and 1}
 
@@ -27,7 +27,7 @@ list containg parameter estimates, Deviance and data frame of iteration
 This function computes the parameter estimates of discrete Pareto distribution using the EM algorithm.
 }
 \details{
-Takes initial guess for the parameters in discrete pareto and the algorithm will estmate the MLE.
+Takes initial guess for the parameters in discrete Pareto and the algorithm will estmate the MLE.
 }
 \examples{
 N<-rdpareto(500, delta=0.2,p=0.6)

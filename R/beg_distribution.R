@@ -1,11 +1,11 @@
-#' The bivariate exponential geometric distrubution (BEG)
+#' The bivariate exponential geometric distribution (BEG)
 #'
 #' Random sample generating function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and p in (0,1).
 #'
 #' rbexpgeo generates random sample from BEG distribution.
 #'
 #' @param n size of sample.
-#' @param beta  numeric paramter which must be numeric greater than  0.
+#' @param beta  numeric parameter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #'
 #' @return  vector of random samples generate from BEG model.
@@ -25,14 +25,14 @@ rbexpgeo<- function(n,beta,p){
 }
 
 
-#' The bivariate exponential geometric distrubution (BEG)
+#' The bivariate exponential geometric distribution (BEG)
 #'
 #' Density function for bivariate exponential geometric distribution with parameters \eqn{\beta > 0} and p in (0,1).
 #'
 #' dbexpgeo is the density  function.
 #'
 #' @param data is bivariate vector  (X,N) vector representing observations from BEG model.
-#' @param beta  numeric paramter which must be numeric greater than  0.
+#' @param beta  numeric parameter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
@@ -67,7 +67,7 @@ dbexpgeo<- function(data,beta,p,log.p=FALSE){
 #' pbexpgeo is the distribution  function.
 #'
 #' @param data is bivariate vector  (X,N) vector representing observations from BEG model.
-#' @param beta  numeric paramter which must be numeric greater than 0.
+#' @param beta  numeric parameter which must be numeric greater than 0.
 #' @param p numeric parameter between 0 and 1.
 #' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
@@ -107,14 +107,14 @@ pbexpgeo<- function(data,beta,p, lower.tail=TRUE,log.p=FALSE){
 
 
 
-#' Fits the bivariate exponential geometric distrubution (BEG) to data
+#' Fits the bivariate exponential geometric distribution (BEG) to data
 #'
 #' This function computes the parameter estimates, confidence interval, deviance and covariance matrix for exponential geometric distribution.
 #'
 #' bexpgeo_fit  fits BEG model to data.
 #'
 #' @param data is bivariate vector  (X,N) vector representing observations from BEG model
-#' @param level confidence level espressed between 0 and 1 (Default is 0.95)
+#' @param level confidence level expressed between 0 and 1 (Default is 0.95)
 #'
 #' @return  list of parameter estimates, confidence interval, deviance and covariance matrix
 #'

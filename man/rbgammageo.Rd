@@ -9,9 +9,9 @@ rbgammageo(n, alpha, beta, p)
 \arguments{
 \item{n}{size of sample.}
 
-\item{alpha}{numeric paramter which must be greater than  0.}
+\item{alpha}{numeric parameter which must be greater than  0.}
 
-\item{beta}{numeric paramter which must be  greater than  0.}
+\item{beta}{numeric parameter which must be  greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 }

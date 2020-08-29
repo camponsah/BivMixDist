@@ -1,11 +1,11 @@
 #' The Geometric with Poisson hidden truncation distribution
 #'
-#' Random sample generating function for discrete Pareto distribution with parameters \eqn{\lambda > 0} and \eqn{p \in (0,1).
+#' Random sample generating function for discrete Pareto distribution with parameters \eqn{\lambda > 0} and \eqn{p \in (0,1)}.
 #'
 #' rgeopois generates random sample from discrete geometric with Poisson hidden truncation distribution.
 #'
 #' @param n size of sample.
-#' @param lambda  numeric paramter which must be numeric greater than  0.
+#' @param lambda  numeric parameter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #'
 #' @return  vector of samples generate from discrete geometric with Poisson hidden truncation distribution.
@@ -19,8 +19,9 @@
 #'
 #' @export
 rgeopois <- function(n,lambda, p){
-  N <- stats:: rgeom(n, prob = p) + stats:: rpois(n, lambda = lambda * (1-p))
-  return(N)
+  K <- stats:: rgeom(n, prob = p)
+  N <- stats:: rpois(n, lambda = lambda * (1-p))
+  return(N+K)
 }
 
 #' The Geometric with Poisson hidden truncation distribution
@@ -30,7 +31,7 @@ rgeopois <- function(n,lambda, p){
 #' dgeopois gives the probability mass.
 #'
 #' @param N A vector of random sample from discrete Pareto.
-#' @param lambda  numeric paramter which must be numeric greater than  0.
+#' @param lambda  numeric parameter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
@@ -45,7 +46,9 @@ rgeopois <- function(n,lambda, p){
 #'
 #' @export
 dgeopois <- function(N,lambda, p, log.p=FALSE){
-  M <- stats:: ppois(N, lambda = lambda) * stats:: dgeom(N, prob = p) *exp(lambda *p)
+  K <- stats:: ppois(N, lambda = lambda)
+  W <-stats:: dgeom(N, prob = p) *exp(lambda *p)
+  M <- K*W
   if (log.p == FALSE){
     return(M)
   }
@@ -60,8 +63,8 @@ dgeopois <- function(N,lambda, p, log.p=FALSE){
 #'
 #' pgeopois gives the distribution function.
 #'
-#' @param q vector of quantiles representing numbers from discrete pareto distribution.
-#' @param lambda  numeric paramter which must be numeric greater than  0.
+#' @param q vector of quantiles representing numbers from discrete Pareto distribution.
+#' @param lambda  numeric parameter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[N\leq n]}, otherwise, \eqn{$P[N> n]$}.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).

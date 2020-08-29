@@ -9,9 +9,9 @@ rblomaxgeo(n, alpha, beta, p)
 \arguments{
 \item{n}{size of sample.}
 
-\item{alpha}{paramter which must be numeric greater than  0.}
+\item{alpha}{parameter which must be numeric greater than  0.}
 
-\item{beta}{paramter which must be numeric greater than  0.}
+\item{beta}{parameter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 }
@@ -20,6 +20,8 @@ vector of samples generate from BLG distribution.
 }
 \description{
 Random sample generating function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in [0,1].
+
+[0,1]: R:0,1%5C
 }
 \details{
 rblomaxgeo generates random samples from BLG distribution.

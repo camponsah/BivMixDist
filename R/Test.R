@@ -1,8 +1,8 @@
 #' Test of exponential versus Pareto type II (Lomax) distributions
 #'
-#' Performs \eqn{H_0:\alpha =0 \quad vs \quad H_0:\alpha =0}.  \eqn{\alpha =0} corresponds to exponetial distribution and \eqn{\alpha >0} corresponds to Pareto type II distribution.
+#' Performs \eqn{H_0:\alpha =0 \quad vs \quad H_0:\alpha =0}.  \eqn{\alpha =0} corresponds to exponential distribution and \eqn{\alpha >0} corresponds to Pareto type II distribution.
 #'
-#' expPareto_test is the function for testing exponential vs. Pareto type II distrbutions
+#' expPareto_test is the function for testing exponential vs. Pareto type II distributions
 #'
 #' @param X data-vector.
 #'
@@ -11,7 +11,7 @@
 #' @examples
 #' X<- Renext:: rlomax(100,scale = 0.200,shape = 0.5)
 #' #X<-rexp(300, rate = 1/10)
-#' test<- expPareto_test
+#' test<- expPareto_test(X)
 #' test
 #'
 #'@references  Arendarczyk, M. and Kozubowski T. J. and Panorska, A. k. (2018). A bivariate distribution with Lomax and geometric margins . Journal of the Korean Statistical Society, 47:405-422.

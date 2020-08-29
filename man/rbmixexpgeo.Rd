@@ -9,7 +9,7 @@ rbmixexpgeo(n, beta, p, q)
 \arguments{
 \item{n}{size of sample.}
 
-\item{beta}{vector of scale paramters which must be numeric greater than  0.}
+\item{beta}{vector of scale parameters which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 

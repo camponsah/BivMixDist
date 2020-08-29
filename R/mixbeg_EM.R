@@ -5,7 +5,7 @@
 #' rbexpgeo generates random sample from BEG distribution.
 #'
 #' @param n size of sample.
-#' @param beta  vector of scale paramters which must be numeric greater than  0.
+#' @param beta  vector of scale parameters which must be numeric greater than  0.
 #' @param q vector of numeric parameters each between 0 and 1, and sum equal to 1.
 #' @param p numeric parameter between 0 and 1.
 #'
@@ -35,7 +35,7 @@ rbmixexpgeo<- function(n,beta,p,q){
 #' dbmixexpgeo is the density  function.
 #'
 #' @param data is bivariate vector  (X,N) vector representing observations from BMEG model.
-#' @param beta  vector of scale paramters which must be numeric greater than  0.
+#' @param beta  vector of scale parameters which must be numeric greater than  0.
 #' @param q vector of numeric parameters each between 0 and 1, and sum equal to 1.
 #' @param p numeric parameter between 0 and 1.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
@@ -76,7 +76,7 @@ dbmixexpgeo<- function(data,beta,p,q,log.p=FALSE){
 #' pbmixexpgeo is the distribution  function.
 #'
 #' @param data is bivariate vector  (X,N) vector representing observations from BMEG model.
-#' @param beta  vector of scale paramters which must be numeric greater than  0.
+#' @param beta  vector of scale parameters which must be numeric greater than  0.
 #' @param q vector of numeric parameters each between 0 and 1, and sum equal to 1.
 #' @param p numeric parameter between 0 and 1.
 #' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.
@@ -127,10 +127,10 @@ pbmixexpgeo<- function(data,beta,p,q, lower.tail=TRUE,log.p=FALSE){
 #'
 #' This function computes the parameter estimates of BMEG distribution using the EM algorithm.
 #'
-#' Takes initial guess for the parameters and the algorithm will estmate the MLE.
+#' Takes initial guess for the parameters and the algorithm will estimate the MLE.
 #'
 #' @param data  dataframe of bivariate random vector (X,N) BMEG distribution.
-#' @param beta scaled paramters vectors for the mixture components, which must be numeric greater than 0.
+#' @param beta scaled parameter vectors for the mixture components, which must be numeric greater than 0.
 #' @param q is vector of probabilities for belong to the components, which must between 0 and 1 and the sum equal to 1.
 #' @param k  number of mixture components
 #' @param maxiter maximum number of iterations.
@@ -196,18 +196,18 @@ bmixexpgeo_em <- function(data, beta =NULL,q=NULL, k=2, maxiter = 1000,
 
 
 
-#' parameter intialization for BMEG EM algoritm
+#' parameter initialization for BMEG EM algorithm
 #'
 #' This function computes the parameter estimates of BMEG distribution using the EM algorithm.
 #'
-#' Takes initial guess for the parameters and the algorithm will estmate the MLE.
+#' Takes initial guess for the parameters and the algorithm will estimate the MLE.
 #'
 #' @param X  data-vector X from BMEG distribution
-#' @param beta scale paramters vectors for the mixture components, which must be numeric greater than 0
+#' @param beta scale parameter vectors for the mixture components, which must be numeric greater than 0
 #' @param q is vector of probabilities for belong to the components, which must between 0 and 1 and the sum equal to 1
 #' @param k  number of mixture components
 #'
-#' @return  list containg intial parameter estimates of beta and q
+#' @return  list containg initial parameter estimates of beta and q
 #'@references  Code adapted from Young et al (2017). mixtools Package : Tools for Analyzing Finite Mixture Models, R CRAN.
 #'
 #' @export

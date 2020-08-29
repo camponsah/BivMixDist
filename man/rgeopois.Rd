@@ -9,7 +9,7 @@ rgeopois(n, lambda, p)
 \arguments{
 \item{n}{size of sample.}
 
-\item{lambda}{numeric paramter which must be numeric greater than  0.}
+\item{lambda}{numeric parameter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 }
@@ -17,7 +17,7 @@ rgeopois(n, lambda, p)
 vector of samples generate from discrete geometric with Poisson hidden truncation distribution.
 }
 \description{
-The Geometric with Poisson hidden truncation distribution
+Random sample generating function for discrete Pareto distribution with parameters \eqn{\lambda > 0} and \eqn{p \in (0,1)}.
 }
 \details{
 rgeopois generates random sample from discrete geometric with Poisson hidden truncation distribution.

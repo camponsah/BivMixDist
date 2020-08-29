@@ -1,13 +1,13 @@
-#' The gamma mixture distcrete Pareto distribution (GMDP)
+#' The gamma mixture discrete Pareto distribution (GMDP)
 #'
-#' Random sample generating function for gamma mixture distcrete Pareto distribution with parameters \eqn{\alpha >0, \beta > 0, \delta \ge 0} and p in (0,1).
+#' Random sample generating function for gamma mixture discrete Pareto distribution with parameters \eqn{\alpha >0, \beta > 0, \delta \ge 0} and p in (0,1).
 #'
 #' rgammamixdpareto generates random samples from GMDP distribution.
 #'
 #' @param n size of sample.
-#' @param alpha  numeric paramter which must be greater than  0.
-#' @param beta  numeric paramter which must be greater than  0.
-#' @param  delta numeric paramter which must be greater than or equal to  0.
+#' @param alpha  numeric parameter which must be greater than  0.
+#' @param beta  numeric parameter which must be greater than  0.
+#' @param  delta numeric parameter which must be greater than or equal to  0.
 #' @param p numeric parameter between 0 and 1.
 #'
 #' @return  vector of random samples from GMDP distribution.
@@ -26,16 +26,16 @@ rgammamixdpareto<- function(n,alpha,beta,delta,p){
   return(data.frame(X,N))
 }
 
-#' The gamma mixture distcrete Pareto distribution (GMDP)
+#' The gamma mixture discrete Pareto distribution (GMDP)
 #'
-#' Density function for gamma mixture distcrete Pareto distribution with parameters \eqn{\alpha >0, \beta > 0, \delta \ge 0} and p in (0,1).
+#' Density function for gamma mixture discrete Pareto distribution with parameters \eqn{\alpha >0, \beta > 0, \delta \ge 0} and p in (0,1).
 #'
 #' dgammamixdpareto is the density function of GMDP model.
 #'
 #' @param data  vector  (X,N) representing observation from GMDP model.
-#' @param alpha  numeric paramter which must be greater than  0.
-#' @param beta  numeric paramter which must be greater than  0.
-#' @param  delta numeric paramter which must be greater than or equal to  0.
+#' @param alpha  numeric parameter which must be greater than  0.
+#' @param beta  numeric parameter which must be greater than  0.
+#' @param  delta numeric parameter which must be greater than or equal to  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
@@ -46,7 +46,7 @@ rgammamixdpareto<- function(n,alpha,beta,delta,p){
 #' den<- dgammamixdpareto(data.df,alpha=1.5, beta=2, delta=0.1, p=0.3)
 #' den
 #'
-#'@references  Amponsah, C. K., Kozubowski, T. J. and Panorska, A. K. (2019). A bivariate distribution with gamma mixture discrete Pareto marginals . In print.
+#'@references  Amponsah, C. K., Kozubowski, T. J. and Panorska, A. K. (2019). A bivariate distribution with gamma mixture discrete Pareto margins . In print.
 #' \url{https://scholarworks.unr.edu/bitstream/handle/11714/2065/Amponsah_unr_0139M_12378.pdf?sequence=1&isAllowed=y}
 #'
 #' @export
@@ -68,16 +68,16 @@ dgammamixdpareto<- function(data,alpha,beta,delta,p,log.p=FALSE){
   }
 }
 
-#' The gamma mixture distcrete Pareto distribution (GMDP)
+#' The gamma mixture discrete Pareto distribution (GMDP)
 #'
-#' Distribution function for gamma mixture distcrete Pareto distribution with parameters \eqn{\alpha >0, \beta > 0, \delta \ge 0} and p in (0,1).
+#' Distribution function for gamma mixture discrete Pareto distribution with parameters \eqn{\alpha >0, \beta > 0, \delta \ge 0} and p in (0,1).
 #'
 #' pgammamixdpareto is the distribution function of GMDP model.
 #'
 #' @param data  vector  (X,N) representing observation from GMDP model.
-#' @param alpha  numeric paramter which must be greater than  0.
-#' @param beta  numeric paramter which must be greater than  0.
-#' @param  delta numeric paramter which must be greater than or equal to  0.
+#' @param alpha  numeric parameter which must be greater than  0.
+#' @param beta  numeric parameter which must be greater than  0.
+#' @param  delta numeric parameter which must be greater than or equal to  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
@@ -129,7 +129,7 @@ pgammamixdpareto<- function(data,alpha,beta,delta,p, lower.tail=TRUE,log.p=FALSE
 }
 
 
-#' Fits the gamma mixture distcrete Pareto distribution (GMDP) to data.
+#' Fits the gamma mixture discrete Pareto distribution (GMDP) to data.
 #'
 #' This function computes the estimates  of parameter in GMDP model.
 #'
@@ -137,7 +137,7 @@ pgammamixdpareto<- function(data,alpha,beta,delta,p, lower.tail=TRUE,log.p=FALSE
 #'
 #' @param data  bivariate vector  (X,N) observations from GMDP model.
 #' @param delta  initial guess of true parameter \eqn{\delta} which is numeric and must be greater than  0 (Default value is 1).
-#' @param p  nitial guess of true parameter p which must be numeric value between 0 and 1 (Default value is 0.5).
+#' @param p  initial guess of true parameter p which must be numeric value between 0 and 1 (Default value is 0.5).
 #' @param method method of estimation for discrete Pareto parameter: \eqn{EM=}EM algorithm or \eqn{MLE=}maximum likelihood estimation (Default method is EM).
 #'
 #' @return  vector of parameter estimates.

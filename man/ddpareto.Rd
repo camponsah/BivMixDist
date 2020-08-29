@@ -9,7 +9,7 @@ ddpareto(N, delta, p, log.p = FALSE)
 \arguments{
 \item{N}{A vector of random sample from discrete Pareto.}
 
-\item{delta}{A shape paramter which must be numeric greater than or equal to 0.}
+\item{delta}{A shape parameter which must be numeric greater than or equal to 0.}
 
 \item{p}{A numeric parameter between 0 and 1}
 

@@ -2,10 +2,10 @@
 #'
 #' Random sample generating function for discrete Pareto distribution with parameters \eqn{\delta \ge 0} and p in (0,1).
 #'
-#' rdpareto generates random sample from discrete pareto distribution.
+#' rdpareto generates random sample from discrete Pareto distribution.
 #'
 #' @param n size of sample.
-#' @param delta  shape paramter which must be numeric greater than or equal to 0.
+#' @param delta  shape parameter which must be numeric greater than or equal to 0.
 #' @param p numeric parameter between 0 and 1.
 #'
 #' @return  vector of samples generate from discrete Pareto distribution.
@@ -21,7 +21,7 @@
 rdpareto<-function(n,delta,p){
   u<- stats:: runif(n)
   sigma<- - 1/(delta*log(1 - p))
-  return(ceiling(sigma*((1 - u)^(- delta) - 1)))
+  N <- ceiling(sigma*((1 - u)^(- delta) - 1))
   return(N)
 }
 
@@ -32,7 +32,7 @@ rdpareto<-function(n,delta,p){
 #' ddpareto gives the probability mass.
 #'
 #' @param N A vector of random sample from discrete Pareto.
-#' @param delta A shape paramter which must be numeric greater than or equal to 0.
+#' @param delta A shape parameter which must be numeric greater than or equal to 0.
 #' @param p A numeric parameter between 0 and 1
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
@@ -64,8 +64,8 @@ ddpareto<-function(N,delta,p,log.p=FALSE){
 #'
 #' pdpareto gives the distribution function.
 #'
-#' @param q vector of quantiles representing numbers from discrete pareto distribution.
-#' @param delta  shape paramter which must be numeric greater than or equal to 0.
+#' @param q vector of quantiles representing numbers from discrete Pareto distribution.
+#' @param delta  shape parameter which must be numeric greater than or equal to 0.
 #' @param p numeric parameter between 0 and 1.
 #' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[N\leq n]}, otherwise, \eqn{$P[N> n]$}.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
@@ -103,10 +103,10 @@ if (lower.tail == TRUE & log.p == FALSE){
 #' qdpareto gives the quantile function.
 #'
 #' @param prob Vector of probabilities.
-#' @param delta  shape paramter which must be numeric greater than or equal to 0.
+#' @param delta  shape parameter which must be numeric greater than or equal to 0.
 #' @param p  numeric parameter between 0 and 1.
 #'
-#' @return  vector quantiles from discrete pareto distribution.
+#' @return  vector quantiles from discrete Pareto distribution.
 #'
 #' @examples
 #' q<-rdpareto(seq(0.1,0.6,0.1), delta=0.2,p=0.6)
@@ -127,10 +127,10 @@ qdpareto<-function(prob,delta,p){
 #'
 #' This function computes the parameter estimates of discrete Pareto distribution using the EM algorithm.
 #'
-#' Takes initial guess for the parameters in discrete pareto and the algorithm will estmate the MLE.
+#' Takes initial guess for the parameters in discrete Pareto and the algorithm will estmate the MLE.
 #'
-#' @param N  vector of random sample from discrete pareto distribution
-#' @param delta shape paramter which must be numeric greater than or equal to 0
+#' @param N  vector of random sample from discrete Pareto distribution
+#' @param delta shape parameter which must be numeric greater than or equal to 0
 #' @param p  numeric parameter between 0 and 1
 #' @param maxiter maximum number of iterations
 #' @param tol tolerance value

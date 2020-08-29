@@ -9,7 +9,7 @@ bgammageo_fit(data, level = 0.95)
 \arguments{
 \item{data}{bivariate vector  (X,N) observations from BGG model.}
 
-\item{level}{confidence level espressed between 0 and 1 (Default is 0.95).}
+\item{level}{confidence level expressed between 0 and 1 (Default is 0.95).}
 }
 \value{
 list of parameter estimates, confidence interval, deviance and covariance matrix.
@@ -26,6 +26,6 @@ fit
 
 }
 \references{
-Barreto-Souza, W. (2012). Bivariate gamma-geometric law and its induced Lévy process . Journal of Multivariate Analysis, 109:130-145.
+Barreto-Souza, W. (2012). Bivariate gamma-geometric law and its induced Levy process . Journal of Multivariate Analysis, 109:130-145.
 \url{https://doi.org/10.1016/j.jmva.2012.03.004}
 }

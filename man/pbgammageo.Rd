@@ -9,9 +9,9 @@ pbgammageo(data, alpha, beta, p, lower.tail = TRUE, log.p = FALSE)
 \arguments{
 \item{data}{bivariate vector  (X,N) observations from BGG model.}
 
-\item{alpha}{numeric paramter which must be  greater than  0.}
+\item{alpha}{numeric parameter which must be  greater than  0.}
 
-\item{beta}{numeric paramter which must be  greater than  0.}
+\item{beta}{numeric parameter which must be  greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 

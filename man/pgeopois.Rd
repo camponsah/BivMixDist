@@ -7,9 +7,9 @@
 pgeopois(q, lambda, p, lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
-\item{q}{vector of quantiles representing numbers from discrete pareto distribution.}
+\item{q}{vector of quantiles representing numbers from discrete Pareto distribution.}
 
-\item{lambda}{numeric paramter which must be numeric greater than  0.}
+\item{lambda}{numeric parameter which must be numeric greater than  0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 

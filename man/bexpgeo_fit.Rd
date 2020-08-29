@@ -2,14 +2,14 @@
 % Please edit documentation in R/beg_distribution.R
 \name{bexpgeo_fit}
 \alias{bexpgeo_fit}
-\title{Fits the bivariate exponential geometric distrubution (BEG) to data}
+\title{Fits the bivariate exponential geometric distribution (BEG) to data}
 \usage{
 bexpgeo_fit(data, level = 0.95)
 }
 \arguments{
 \item{data}{is bivariate vector  (X,N) vector representing observations from BEG model}
 
-\item{level}{confidence level espressed between 0 and 1 (Default is 0.95)}
+\item{level}{confidence level expressed between 0 and 1 (Default is 0.95)}
 }
 \value{
 list of parameter estimates, confidence interval, deviance and covariance matrix

@@ -5,8 +5,8 @@
 #' rblomaxgeo generates random samples from BLG distribution.
 #'
 #' @param n size of sample.
-#' @param alpha paramter which must be numeric greater than  0.
-#' @param beta  paramter which must be numeric greater than  0.
+#' @param alpha parameter which must be numeric greater than  0.
+#' @param beta  parameter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #'
 #' @return  vector of samples generate from BLG distribution.
@@ -33,8 +33,8 @@ rblomaxgeo<- function(n,alpha,beta,p){
 #' dblomaxgeo is the density function for BLG model.
 #'
 #' @param data  bivariate vector  (X,N) observations from BLG model.
-#' @param alpha paramter which must be numeric greater than  0.
-#' @param beta  paramter which must be numeric greater than  0.
+#' @param alpha parameter which must be numeric greater than  0.
+#' @param beta  parameter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
@@ -69,8 +69,8 @@ dblomaxgeo<- function(data,alpha,beta,p,log.p=FALSE){
 #' pblomaxgeo is the distribution function for BLG model.
 #'
 #' @param data  bivariate vector  (X,N) observations from BLG model.
-#' @param alpha paramter which must be numeric greater than  0.
-#' @param beta  paramter which must be numeric greater than  0.
+#' @param alpha parameter which must be numeric greater than  0.
+#' @param beta  parameter which must be numeric greater than  0.
 #' @param p numeric parameter between 0 and 1.
 #' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).

@@ -9,12 +9,12 @@ qdpareto(prob, delta, p)
 \arguments{
 \item{prob}{Vector of probabilities.}
 
-\item{delta}{shape paramter which must be numeric greater than or equal to 0.}
+\item{delta}{shape parameter which must be numeric greater than or equal to 0.}
 
 \item{p}{numeric parameter between 0 and 1.}
 }
 \value{
-vector quantiles from discrete pareto distribution.
+vector quantiles from discrete Pareto distribution.
 }
 \description{
 Quantile function for discrete Pareto distribution with parameters \eqn{\delta \ge 0} and p in (0,1).

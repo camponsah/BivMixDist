@@ -13,12 +13,12 @@ Imports:
     stats,
     statmod,
     pracma,
+    utils,
     Renext
 Roxygen: list(markdown=TRUE)
-RoxygenNote: 6.1.1
+RoxygenNote: 6.0.1
 Suggests:
     testthat,
     knitr,
     rmarkdown
 VinetteBuilder: knitr
-VignetteBuilder: knitr

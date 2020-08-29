@@ -10,7 +10,7 @@ bmixexpgeo_em(data, beta = NULL, q = NULL, k = 2, maxiter = 1000,
 \arguments{
 \item{data}{dataframe of bivariate random vector (X,N) BMEG distribution.}
 
-\item{beta}{scaled paramters vectors for the mixture components, which must be numeric greater than 0.}
+\item{beta}{scaled parameter vectors for the mixture components, which must be numeric greater than 0.}
 
 \item{q}{is vector of probabilities for belong to the components, which must between 0 and 1 and the sum equal to 1.}
 
@@ -29,7 +29,7 @@ list containg parameter estimates, Deviance and data frame of iteration
 This function computes the parameter estimates of BMEG distribution using the EM algorithm.
 }
 \details{
-Takes initial guess for the parameters and the algorithm will estmate the MLE.
+Takes initial guess for the parameters and the algorithm will estimate the MLE.
 }
 \examples{
 data.df<-rbmixexpgeo(20, beta=c(1,2),p=0.6,q=c(0.4,0.6))
