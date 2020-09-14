@@ -26,12 +26,10 @@
 #' @export
 rdHTgamma<- function(n, x, alpha, beta, distr, lambda=NULL, prob=NULL,
                            delta=NULL, size=NULL){
-  pb <- utils:: txtProgressBar(min = 1, max = n, style = 3)
   N <- NULL
   if(distr=="Poisson") {
     if (is.null(lambda)) stop("'lambda' must be specified")
     for (i in 1:n){
-    Sys.sleep(0.1)
     K <- 0
     T <- 1
       while (K < T) {
@@ -40,13 +38,11 @@ rdHTgamma<- function(n, x, alpha, beta, distr, lambda=NULL, prob=NULL,
       T <- sum(gammaRv <= x) + 1
       }
     N[i] <- K
-   utils:: setTxtProgressBar(pb, i)
     }
   }
   else if(distr=="Geometric") {
     if (is.null(prob)) stop("'prob' must be specified")
     for (i in 1:n){
-      Sys.sleep(0.1)
       K <- 0
       T <- 1
       while (K < T) {
@@ -55,13 +51,11 @@ rdHTgamma<- function(n, x, alpha, beta, distr, lambda=NULL, prob=NULL,
         T <- sum(gammaRv <= x) + 1
       }
       N[i] <- K
-      utils:: setTxtProgressBar(pb, i)
     }
   }
   else if(distr=="DPareto") {
     if (is.null(delta) | is.null(prob)) stop("both 'delta' and 'prob' must be specified")
     for (i in 1:n){
-      Sys.sleep(0.1)
       K <- 0
       T <- 1
       while (K < T) {
@@ -70,13 +64,11 @@ rdHTgamma<- function(n, x, alpha, beta, distr, lambda=NULL, prob=NULL,
         T <- sum(gammaRv <= x) + 1
       }
       N[i] <- K
-      utils:: setTxtProgressBar(pb, i)
     }
   }
   else if(distr=="nbinom") {
     if (is.null(size) | is.null(prob)) stop("both 'size' and 'prob' must be specified")
     for (i in 1:n){
-      Sys.sleep(0.1)
       K <- 0
       T <- 1
       while (K < T) {
@@ -85,10 +77,8 @@ rdHTgamma<- function(n, x, alpha, beta, distr, lambda=NULL, prob=NULL,
         T <- sum(gammaRv <= x) + 1
       }
       N[i] <- K
-      utils:: setTxtProgressBar(pb, i)
     }
   }
- close(pb)
   return(N)
 }
 
