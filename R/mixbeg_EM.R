@@ -13,8 +13,8 @@
 #' @return  vector of random samples generate from BMEG model.
 #'
 #' @examples
-#' N <- rfmbeg(10, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
-#' N
+#' data.df <- rfmbeg(10, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
+#' data.df
 #'
 #'@references  Amponsah, C. K. and Kozubowski, T.J., and Panorska, A.K. (2020). A finite mixture of bivariate distribution with mixture exponential and geometric (FMBEG) marginals. Inprint.
 #'
@@ -69,25 +69,25 @@ rfmbeg<- function(n, beta, p, q, pi){
 #' @return  vector of densities.
 #'
 #' @examples
-#' data <- rfmbeg(10, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
-#' den <- dfmbeg(data, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
+#' data.df <- rfmbeg(10, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
+#' den <- dfmbeg(data=data.df, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
 #' den
 #'
 #'@references  Amponsah, C. K. and Kozubowski, T.J., and Panorska, A.K. (2020). A finite mixture of bivariate distribution with mixture exponential and geometric (FMBEG) marginals. Inprint.
 #'
 #'
 #' @export
-dfmbeg <- function(data, beta, p, q=1, pi=1, log.p=FALSE){
-  if(sum(q) != 1) stop("argument 'q' must sum to 1")
-  if (sum(pi) != 1) stop("argument 'pi' must sum to 1")
+dfmbeg <- function(data, beta, p, q, pi, log.p=FALSE){
+  #if(sum(q) != 1) stop("argument 'q' must sum to 1")
+  #if (sum(pi) != 1) stop("argument 'pi' must sum to 1")
   if (c(length(q)*length(pi)) != c(length(beta)*length(p))) stop("Product of length of arguments 'q,pi' must be equal to the product of length of arguments 'beta, p'")
-  dens <- function(dat.df){
-    gam_pd <- q * stats:: dgamma(dat.df[1], shape = dat.df[2], rate = beta)
-    geo_pd <- pi *  stats:: dgeom(dat.df[2], prob = p)/(1-p)
-    pd <- prod(sum(gam_pd), sum(geo_pd))
-    return(pd)
+  func_den <- function(df){
+    den.gamm <- q * dgamma(x=df[1], shape = df[2], rate=beta)
+    den.geo <- pi* p*(1-p)^(df[2]-1)
+    den <- sum(kronecker(den.gamm, den.geo))
+    return(den)
   }
-  M <- apply(data.df, 1, dens)
+  M <- apply(data, 1, dens)
   if (log.p == FALSE){
     return(M)
   }else{
@@ -114,8 +114,8 @@ dfmbeg <- function(data, beta, p, q=1, pi=1, log.p=FALSE){
 #' @return  vector of distribution.
 #'
 #' @examples
-#' data <- rfmbeg(10, rfmbeg(10, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
-#' prob <- pfmbeg(data, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
+#' data.df <- rfmbeg(10, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
+#' prob <- pfmbeg(data=data.df, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
 #' prob
 #'
 #'@references  Amponsah, C. K. and Kozubowski, T.J., and Panorska, A.K. (2020). A Mixed bivariate distribution with mixture exponential and geometric marginals. Inprint.
@@ -161,24 +161,26 @@ pfmbeg <- function(data, beta, p, q, pi, lower.tail=TRUE, log.p=FALSE){
 
 #' EM algorithm function for the mixed bivariate distribution with mixture of exponential and geometric marginals (BMEG)
 #'
-#' This function computes the parameter estimates of BMEG distribution using the EM algorithm.
+#' This function computes the parameter estimates of FMBEG distribution using the EM algorithm.
 #'
 #' Takes initial guess for the parameters and the algorithm will estimate the MLE.
 #'
 #' @param data  dataframe of bivariate random vector (X,N) BMEG distribution.
-#' @param beta scaled parameter vectors for the mixture components, which must be numeric greater than 0.
-#' @param w is vector of probabilities for belong to the components, which must between 0 and 1 and the sum equal to 1.
-#' @param m  number of gamma components
-#' @param l  number of geometric components
-#' @param maxiter maximum number of iterations.
-#' @param tol tolerance value.
+#' @param beta  numeric parameter vectors, which must be numeric greater than 0. Default value is NULL.
+#' @param p vector of numeric parameters between 0 and 1. Default value is NULL.
+#' @param q vector of gamma membership probabilities between 0 and 1, and sum equal to 1. Default value is NULL.
+#' @param pi vector of geometric membership probabilities between 0 and 1, and sum equal to 1. Default value is NULL.
+#' @param m  number of gamma components. Default value is 2.
+#' @param l  number of geometric components. Default value is 1.
+#' @param maxiter maximum number of iterations. Default value is 1000.
+#' @param tol tolerance value. Default value is 1e-08
 #' @param verb If TRUE, estimates are printed during each iteration.
 #'
-#' @return  list containing parameter estimates, Deviance and data frame of iteration
+#' @return  list containing data frame parameter estimates, log-likelihood value and data frame of iteration
 #'
 #' @examples
-#' data.df <- rfmbeg(10, beta = c(1,2,10), p=0.5, w=c(0.3,0.2,0.5))
-#' fit <- fmbeg_em(data=data.df, m=3,l=1)
+#' data.df <- rfmbeg(100, beta = c(1,2,10), p=c(0.5,0.8,0.01), q=c(0.3,0.2,0.5), pi=c(0.2,0.3,0.5))
+#' fit <- fmbeg_em(data=data.df, m=3,l=3)
 #' fit$par
 #'
 #'@references  Amponsah, C. K. and Kozubowski, T.J., and Panorska, A.K. (2020). A Mixed bivariate distribution with mixture exponential and geometric marginals. Inprint.
@@ -188,16 +190,14 @@ fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
                      maxiter = 1000, tol = 1e-08,verb=FALSE){
   if( !is.numeric(m) | m <= 0) stop("Gamma components argument 'm' must numeric greater than '0'")
   if(!is.numeric(l) | l <= 0) stop("Geometric components argument 'l' must numeric greater than '0'")
-  N <- data[,2]
-  X <- data[,1]
-  n <- length(N)
+  n <- length(data[,2])
   if (is.null(q) |is.null(beta)) {
-    beta.init <- fmbeg_gamma.init(X=data, beta = beta, q=q, m=m)
+    beta.init <- fmbeg_gamma.init(data, beta = beta, q=q, m=m)
     beta <- beta.init$beta
     q<- beta.init$q
   }
   if (is.null(pi) |is.null(p)) {
-    p.init <- fmbeg_geo.init(X=data,p=p, pi=pi, l=l)
+    p.init <- fmbeg_geo.init(data,p=p, pi=pi, l=l)
     p <- p.init$p
     pi <- p.init$pi
   }
@@ -211,64 +211,83 @@ fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
       colnames(pair_list) <- c("beta","p","weights")
       return(pair_list)
     }
+    func_pi <- function(df){
+      den.gamm <- q * dgamma(x=df[1], shape = df[2], rate=beta)
+      den.geo <- pi* p*(1-p)^(df[2]-1)
+      den <- outer(den.gamm, den.geo)
+      den  <- den /sum(den)
+      pi <- c(apply(den,2,sum))
+      return(pi)
+    }
+    func_q <- function(df){
+      den.gamm <- q * dgamma(x=df[1], shape = df[2], rate=beta)
+      den.geo <- pi* p*(1-p)^(df[2]-1)
+      den <- outer(den.gamm, den.geo)
+      den  <- den /sum(den)
+      q <- c(apply(den,1,sum))
+      return(q)
+    }
     ### parameters estimation function
-    p_est <- function(data.df, beta, p, q, pi){
-      if (length(p)==1){
-        p_hat <- 1/mean(data.df[,2])
-        pi_hat <- 1
-      } else {
-        p_hat <- NULL
-        pi_hat <- NULL
-        for (i in 1:length(p)) {
-          p_mat <- NULL
-          for (j in 1:length(beta)){
-            p_mat <- cbind(p_mat, dfmbeg(data = data.df, beta = beta[j],p=p[i],q=q[j], pi=pi[i]))
-          }
-          p_mat <- p_mat/dfmbeg(data = data.df, beta = beta, p=p, q=q, pi=pi)
-          p_hat[i] <- sum(apply(p_mat,2,sum))/sum(data.df[,2]*apply(p_mat,1,sum))
-          pi_hat[i] <- sum(apply(p_mat,1,sum))
-        }
-        pi_hat <- pi_hat/sum(pi_hat)
-        par<- cbind(p_hat, pi_hat)
-        colnames(par) <- c("p", "pi")
-        return(par)
-      }
-    }
-    beta_est <- function(data.df, beta, p, q, pi){
-        if (length(beta)==1){
-          beta_hat <- mean(data.df[,2])/mean(data.df[,1])
-          q_hat <- 1
-        } else {
-          beta_hat <- NULL
-          q_hat <- NULL
-          for (i in 1:length(beta)) {
-            beta_hat <- NULL
-            for (j in 1:length(p)){
-              beta_hat <- cbind(beta_hat,dfmbeg(data = data, beta = beta[i],p=p[j], q=q[i],pi=pi[j]))
-            }
-            p_mat <- p_mat/dfmbeg(data = data.df, beta = beta, p=p, q=q, pi=pi)
-            beta_hat[i]<- sum(data.df[,2]*apply(beta_hat,1,sum))/sum(data.df[,1]*apply(beta_hat,1,sum))
-            q_hat[i] <- sum(apply(beta_mat,1,sum))
-          }
-          q_hat <- q_hat/sum(q_hat)
-          par<- cbind(beta_hat, q_hat)
-          colnames(par) <- c("beta", "q")
-          return(par)
-        }
-    }
-  ll.old <- sum(log(dfmbeg(data = data,beta = beta, p=p, q=q, pi=pi)))
+  #  p_est <- function(data.df, beta, p, q, pi){
+  #    if (length(p)==1){
+  #      p_hat <- 1/mean(data.df[,2])
+  #      pi_hat <- 1
+  #    } else {
+  #      p_hat <- NULL
+  #     pi_hat <- NULL
+  #      for (i in 1:length(p)) {
+   #       p_mat <- NULL
+   #       for (j in 1:length(beta)){
+   #         p_mat <- cbind(p_mat, q[j]*pi[i]* dfmbeg(data = data.df, beta = beta[j],p=p[i],q=1, pi=1))
+   #       }
+   #       p_mat <- p_mat/dfmbeg(data = data.df, beta = beta, p=p, q=q, pi=pi)
+   #       p_hat[i] <- sum(p_mat)/sum(data.df[,2]*apply(p_mat,1,sum))
+    #      pi_hat[i] <- sum(p_mat)
+    #    }
+    #  }
+    #  pi_hat <- pi_hat/sum(pi_hat)
+    #  par<- data.frame(p_hat, pi_hat)
+    #  colnames(par) <- c("p", "pi")
+   #   return(par)
+   # }
+   # beta_est <- function(data.df, beta, p, q, pi){
+   #     if (length(beta)==1){
+    #      beta_hat <- mean(data.df[,2])/mean(data.df[,1])
+     #     q_hat <- 1
+     #   } else {
+     #     beta_hat <- NULL
+     #     q_hat <- NULL
+     #     for (i in 1:length(beta)) {
+     #       beta_mat <- NULL
+      #      for (j in 1:length(p)){
+      #        beta_mat <- cbind(beta_mat,q[i]*pi[j]*dfmbeg(data = data.df, beta = beta[i],p=p[j], q=1,pi=1))
+      #      }
+      #      beta_mat <- beta_mat/dfmbeg(data = data.df, beta = beta, p=p, q=q, pi=pi)
+      #      beta_hat[i]<- sum(data.df[,2]*apply(beta_mat,1,sum))/sum(data.df[,1]*apply(beta_mat,1,sum))
+      #      q_hat[i] <- sum(apply(beta_mat,1,sum))
+      #    }
+       # }
+      #q_hat <- q_hat/sum(q_hat)
+    #  par<- data.frame(beta_hat, q_hat)
+     # colnames(par) <- c("beta", "q")
+    #  return(par)
+    #}
+  ll.old <- - sum(log(dfmbeg(data = data,beta = beta, p=p, q=q, pi=pi)))
   diff <- 1 + tol
   it <- 0
   ####
   while(diff > tol && it < maxiter){
-    ### E and M steps
-    fit_p <- p_est(data.df=data, beta=beta, p=p, q=q, pi=pi)
-    fit_beta <- beta_est(data.df=data, beta=beta, p=p, q=q, pi=pi)
+    ### E step
+    fit_pi <-  apply(data, 1, func_pi)
+    fit_q <- apply(data, 1, func_q)
+    ## M step
+    pi <- apply(fit_pi, 1, sum)/ sum(apply(fit_pi, 1, sum))
+    q <- apply(fit_q, 1, sum)/ sum(apply(fit_q, 1, sum))
     beta <- fit_beta$beta
     q <- fit_beta$q
     p <- fit_p$p
     pi <- fit_p$pi
-    ll.new <- sum(log(dfmbeg(data = data,rate = rate, p=p, w=w)))
+    ll.new <- - sum(log(dfmbeg(data = data,beta = beta, p=p, q=q, pi=pi)))
     diff <- abs(ll.new - ll.old)
     ll.old <- ll.new
     it <- it +1
@@ -280,8 +299,8 @@ fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
   if (it == maxiter) {
     cat("Warning! Convergence not achieved!", "\n")
   }
- par<- parameters(beta,p,q,pi)
-  result <- list(par=para, beta=beta, p=p, q=q, pi=pi, log.like=ll.new,
+ par <- parameters(beta,p,q,pi)
+  result <- list(par=par, beta=beta, p=p, q=q, pi=pi, log.like=-ll.new,
                  Iterations=it, ft="fmbeg_em")
 
   class(result)<- "mixEM"
@@ -296,28 +315,27 @@ fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
 #'
 #' Takes initial guess for the parameters and the algorithm will estimate the MLE.
 #'
-#' @param X  data-vector X from BMEG distribution
-#' @param beta scale parameter vectors for the mixture components, which must be numeric greater than 0
-#' @param w is vector of probabilities for belong to the components, which must between 0 and 1 and the sum equal to 1
-#' @param m  number of mixture components
+#' @param data  data-vector from FMBEG distribution
+#' @param beta numeric parameters, which must be numeric greater than 0. Default value is NULL
+#' @param q vector of gamma membership probabilities between 0 and 1, and sum equal to 1. Default value is NULL.
+#' @param m  number of gamma components. Default value is 2.
 #'
 #' @return  list containing initial parameter estimates of beta and q
 #'@references  Code adapted from Young et al. (2017). mixtools Package : Tools for Analyzing Finite Mixture Models, R CRAN.
 #'
 #' @export
-fmbeg_gamma.init <- function(X, beta = NULL, q= NULL, m=2){
-  n <- length(X[,1])
+fmbeg_gamma.init <- function(data, beta = NULL, q= NULL, m){
+  n <- length(data[,1])
   if (is.null(q)) {
-    u <- stats:: runif(m)
-    q <- u/sum(u)
+    q <- rep(1/m, m)
   }
 
   if(is.null(beta)){
   if(m==1){
-    beta = mean(X[,2])/mean(X[,1])
+    beta = mean(data[,2])/mean(data[,1])
   } else{
-    x.sort<- X[order(X[,1]),]
-    ind <- floor(n*cumsum(w))
+    x.sort<- data[order(data[,1]),]
+    ind <- floor(n*cumsum(q))
     beta<- NULL
     t <- x.sort[(1:(ind[1]+1)),]
     beta[1] <- mean(t[,2])/mean(t[,1])
@@ -339,26 +357,27 @@ fmbeg_gamma.init <- function(X, beta = NULL, q= NULL, m=2){
 #'
 #' Takes initial guess for the parameters and the algorithm will estimate the MLE.
 #'
-#' @param N  discrete data from the marginal distribution of N in BMEG distribution
-#' @param w is vector of probabilities for belong to the components, which must between 0 and 1 and the sum equal to 1
-#' @param l  number of mixture components
+#' @param data  data from FMBEG distribution
+#' @param p vector of numeric parameters between 0 and 1. Default value is NULL.
+#' @param pi vector of geometric membership probabilities between 0 and 1, and sum equal to 1. Default value is NULL.
+#' @param l  number of geometric components. Default value is 1.
 #'
-#' @return  list containing initial parameter estimates of beta and q
+#' @return  list containing initial parameter estimates of p and membership probabilities
+#'
 #'@references  Code adapted from Young et al. (2017). mixtools Package : Tools for Analyzing Finite Mixture Models, R CRAN.
 #'
 #' @export
-fmbeg_geo.init <- function(X, p = NULL, pi= NULL, l=1){
-  N <- X[,2]
+fmbeg_geo.init <- function(data, p = NULL, pi= NULL, l){
+  N <- data[,2]
   n <- length(N)
   if (is.null(pi)) {
-    u <- stats:: runif(l)
-    pi <- u/sum(u)
+    pi <- rep(1/l, l)
   } #else k <- length(w)
   if(l==1){
     N.bar <- mean(N)
   } else{
     N.sort <- sort(N)
-    ind <- floor(n*cumsum(w))
+    ind <- floor(n*cumsum(pi))
     N.part<-list()
     N.part[[1]] <- N.sort[1:(ind[1]+1)]
     for(j in 2:l){
