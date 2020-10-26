@@ -5,37 +5,51 @@
 #' rfmbeg generates random sample from FMBEG distribution.
 #'
 #' @param n size of sample.
-#' @param beta  vector of scale parameters which must be numeric greater than  0.
-#' @param w vector of numeric weight parameters each between 0 and 1, and sum equal to 1.
-#' @param p numeric parameter between 0 and 1.
+#' @param beta  vector of parameters which must be numeric greater than  0.
+#' @param p vector of numeric parameters between 0 and 1 of the finite mixture of geometric distribution.
+#' @param q vector of gamma membership probabilities between 0 and 1, and sum equal to 1.
+#' @param pi vector of geometric membership probabilities between 0 and 1, and sum equal to 1.
 #'
 #' @return  vector of random samples generate from BMEG model.
 #'
 #' @examples
-#' N <- rfmbeg(10, beta = c(1,2,10), p=0.5, w=c(0.3,0.2,0.5))
+#' N <- rfmbeg(10, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
 #' N
 #'
 #'@references  Amponsah, C. K. and Kozubowski, T.J., and Panorska, A.K. (2020). A finite mixture of bivariate distribution with mixture exponential and geometric (FMBEG) marginals. Inprint.
 #'
 #' @export
-rfmbeg<- function(n,beta,p,w){
-  if (sum(w) != 1) stop("argument 'w' must sum to 1")
-  if (length(w) != c(length(beta)*length(p))) stop("length of argument 'w' must be equal to the product of length of 'beta' and 'p'")
-  pair_list <- expand.grid(beta, p)
-  u<- stats:: runif(n)
-  k <- 1:n
-  data <- data.frame(k,u)
-  q<-cumsum(w)
-  rfun <- function(dat){
-    indx <- findInterval(dat[2],q)+1
-    para <- pair_list[indx,]
-    N<- stats:: rgeom(1,prob = para$Var2)+1
-    X<- stats:: rgamma(1,shape =N,rate = para$Var1)
-    return(c(X,N))
+rfmbeg<- function(n, beta, p, q, pi){
+  if (sum(q) != 1) stop("argument 'q' must sum to 1")
+  if (sum(pi) != 1) stop("argument 'pi' must sum to 1")
+  if (c(length(q)*length(pi)) != c(length(beta)*length(p))) stop("Product of length of arguments 'q,pi' must be equal to the product of length of arguments 'beta, p'")
+  pair_list <- NULL
+  for(i in 1:length(q)){
+    pair_list <- rbind(pair_list,expand.grid(q[i], pi))
   }
-  M<-t(apply(data, 1, rfun))
-  colnames(M) <- c("X", "N")
-  return(data.frame(M))
+    if (length(p)==1){
+      N <- stats:: rgeom(n,prob = p)+1
+    }else{
+      u <- stats:: runif(n)
+      indx <- findInterval(u, cumsum(pi))+1
+      indx <- data.frame(indx)
+      fun <- function(par) {
+        N <- stats:: rgeom(1, prob = p[par])+1
+      }
+      N <- apply(indx, 1, fun)
+    }
+  if(length(q)==1){
+    X <- stats:: rgamma(n,shape =N,rate = beta)
+  } else{
+    u <- stats:: runif(n)
+    indx <- findInterval(u, cumsum(q))+1
+    indx <- data.frame(indx,N)
+    fun <- function(par) {
+      N <- stats:: rgamma(1, shape =par[2], rate = beta[par[1]])
+    }
+    X <- apply(indx, 1, fun)
+  }
+  return(data.frame(X,N))
   }
 
 
@@ -46,35 +60,34 @@ rfmbeg<- function(n,beta,p,w){
 #' dfmbeg is the density  function.
 #'
 #' @param data is bivariate vector  (X,N) vector representing observations from FMBEG model.
-#' @param beta  vector of scale parameters which must be numeric greater than  0.
-#' @param w vector of numeric weight parameters each between 0 and 1, and sum equal to 1.
-#' @param p numeric parameters between 0 and 1.
+#' @param beta  vector of parameters which must be numeric greater than  0.
+#' @param p vector of numeric parameters between 0 and 1 of the finite mixture of geometric distribution.
+#' @param q vector of gamma membership probabilities between 0 and 1, and sum equal to 1.
+#' @param pi vector of geometric membership probabilities between 0 and 1, and sum equal to 1.
 #' @param log.p logical; if TRUE, densities are given as logarithmic values.
 #'
 #' @return  vector of densities.
 #'
 #' @examples
-#' data <- rfmbeg(10, beta = c(1,2,10), p=0.5, w=c(0.3,0.2,0.5))
-#' den <- dfmbeg(data, beta = c(1,2,10), p=0.5, w=c(0.3,0.2,0.5))
+#' data <- rfmbeg(10, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
+#' den <- dfmbeg(data, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
 #' den
 #'
 #'@references  Amponsah, C. K. and Kozubowski, T.J., and Panorska, A.K. (2020). A finite mixture of bivariate distribution with mixture exponential and geometric (FMBEG) marginals. Inprint.
 #'
 #'
 #' @export
-dfmbeg <- function(data,rate,p,w,log.p=FALSE){
-  if (sum(w) != 1) stop("argument 'w' must sum to 1")
-  if (length(w) != c(length(rate)*length(p))) stop("length of argument 'w' must be equal to the product of length of 'rate' and 'p'")
-  N<-data[,2]
-  X<-data[,1]
-  expo <- dexp(X, rate = rate)
+dfmbeg <- function(data, beta, p, q=1, pi=1, log.p=FALSE){
+  if(sum(q) != 1) stop("argument 'q' must sum to 1")
+  if (sum(pi) != 1) stop("argument 'pi' must sum to 1")
+  if (c(length(q)*length(pi)) != c(length(beta)*length(p))) stop("Product of length of arguments 'q,pi' must be equal to the product of length of arguments 'beta, p'")
   dens <- function(dat.df){
-    gam_pd <- stats:: dgamma(dat.df[1], shape = dat.df[2], rate = rate)
-    geo_pd <- stats:: dgeom(dat.df[2], prob = p)/(1-p)
-    pd <- sum(kronecker(gam_pd,geo_pd) *w)
+    gam_pd <- q * stats:: dgamma(dat.df[1], shape = dat.df[2], rate = beta)
+    geo_pd <- pi *  stats:: dgeom(dat.df[2], prob = p)/(1-p)
+    pd <- prod(sum(gam_pd), sum(geo_pd))
     return(pd)
   }
-  M <- apply(data, 1, dens)
+  M <- apply(data.df, 1, dens)
   if (log.p == FALSE){
     return(M)
   }else{
@@ -91,26 +104,33 @@ dfmbeg <- function(data,rate,p,w,log.p=FALSE){
 #' pfmbeg is the distribution  function.
 #'
 #' @param data is bivariate vector  (X,N) vector representing observations from BMEG model.
-#' @param beta  vector of scale parameters which must be numeric greater than  0.
-#' @param w vector of numeric weight parameters each between 0 and 1, and sum equal to 1.
-#' @param p numeric parameter between 0 and 1.
+#' @param beta  vector of parameters which must be numeric greater than  0.
+#' @param p vector of numeric parameters between 0 and 1 of the finite mixture of geometric distribution.
+#' @param q vector of gamma membership probabilities between 0 and 1, and sum equal to 1.
+#' @param pi vector of geometric membership probabilities between 0 and 1, and sum equal to 1.
 #' @param lower.tail logical; if TRUE (default), probabilities are \eqn{P[X \le x, N \leq n]}, otherwise, \eqn{P[X > x, N > n]}.
 #' @param log.p logical; if TRUE, probabilities p are given as log(p).
 #'
 #' @return  vector of distribution.
 #'
 #' @examples
-#' data <- rfmbeg(10, beta = c(1,2,10), p=0.5, w=c(0.3,0.2,0.5))
-#' prob <- pfmbeg(data, beta = c(1,2,10), p=0.5, w=c(0.3,0.2,0.5))
+#' data <- rfmbeg(10, rfmbeg(10, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
+#' prob <- pfmbeg(data, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
 #' prob
 #'
 #'@references  Amponsah, C. K. and Kozubowski, T.J., and Panorska, A.K. (2020). A Mixed bivariate distribution with mixture exponential and geometric marginals. Inprint.
 #'
 #' @export
-pfmbeg <- function(data,beta,p,w, lower.tail=TRUE,log.p=FALSE){
-  if (sum(w) != 1) stop("argument 'w' must sum to 1")
-  if (length(w) != c(length(beta)*length(p))) stop("length of argument 'w' must be equal to the product of length of 'beta' and 'p'")
-  pair_list <- data.frame(expand.grid(beta, p), w)
+pfmbeg <- function(data, beta, p, q, pi, lower.tail=TRUE, log.p=FALSE){
+  if(sum(q) != 1) stop("argument 'q' must sum to 1")
+  if (sum(pi) != 1) stop("argument 'pi' must sum to 1")
+  if (c(length(q)*length(pi)) != c(length(beta)*length(p))) stop("Product of length of arguments 'q,pi' must be equal to the product of length of arguments 'beta, p'")
+  pair_list <- NULL
+  for(i in 1:length(beta)){
+    pair_list <- rbind(pair_list,expand.grid(beta[i], p))
+  }
+  w <- kronecker(q, pi)
+  pair_list <- data.frame(pair_list, w)
   beg_cdf <- function(d){
     k<- 1:n
     df <- sum( stats:: pgamma(x, shape = k, rate = d[1])* d[2]*(1-d[2])^(k-1) ) *d[3]
@@ -164,67 +184,90 @@ pfmbeg <- function(data,beta,p,w, lower.tail=TRUE,log.p=FALSE){
 #'@references  Amponsah, C. K. and Kozubowski, T.J., and Panorska, A.K. (2020). A Mixed bivariate distribution with mixture exponential and geometric marginals. Inprint.
 #'
 #' @export
-fmbeg_em <- function(data, rate =NULL, p=NULL, w=NULL, m=1, l=2,
+fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
                      maxiter = 1000, tol = 1e-08,verb=FALSE){
   if( !is.numeric(m) | m <= 0) stop("Gamma components argument 'm' must numeric greater than '0'")
   if(!is.numeric(l) | l <= 0) stop("Geometric components argument 'l' must numeric greater than '0'")
   N <- data[,2]
   X <- data[,1]
   n <- length(N)
-  if (is.null(w)) {
-    beta.init <- fmbeg_gamma.init(X=data,rate = rate, w=NULL, m=m)
-    p.init <- fmbeg_geo.init(X=data,p=p, w=NULL, l=l)
-    rate <- beta.init$rate
-    p <- p.init$p
-    rate.w <- beta.init$w
-    p.w <- p.init$w
-    w <- kronecker(rate.w,p.w)/ sum(kronecker(rate.w,p.w))
-  } else {
-    rate.w <- w[1:m]/sum(w[1:m])
-    p.w <- w[-c(1:m)]/sum(w[-c(1:m)])
+  if (is.null(q) |is.null(beta)) {
+    beta.init <- fmbeg_gamma.init(X=data, beta = beta, q=q, m=m)
+    beta <- beta.init$beta
+    q<- beta.init$q
   }
-  pair_list <- data.frame(expand.grid(rate, p), w)
-  colnames(pair_list) <- c("b","p","w")
- #dens<- function(d, df){
- #   pd<-NULL
- #   for(i in 1:nrow(d)){
- #    pd<- cbind(pd, dfmbeg(df, beta =d[i,]$b, p=d[i,]$p, w=d[i,]$w))
- #   }
- #   return(pd)
- # }
-  ll.old <- sum(log(dfmbeg(data = data,rate = rate, p=p, w=w)))
+  if (is.null(pi) |is.null(p)) {
+    p.init <- fmbeg_geo.init(X=data,p=p, pi=pi, l=l)
+    p <- p.init$p
+    pi <- p.init$pi
+  }
+    parameters <- function(beta,p,q,pi){
+      pair_list <- NULL
+      for(i in 1:length(beta)){
+        pair_list <- rbind(pair_list,expand.grid(beta[i], p))
+      }
+      w <- kronecker(q,pi)
+      pair_list <- data.frame(pair_list, w)
+      colnames(pair_list) <- c("beta","p","weights")
+      return(pair_list)
+    }
+    ### parameters estimation function
+    p_est <- function(data.df, beta, p, q, pi){
+      if (length(p)==1){
+        p_hat <- 1/mean(data.df[,2])
+        pi_hat <- 1
+      } else {
+        p_hat <- NULL
+        pi_hat <- NULL
+        for (i in 1:length(p)) {
+          p_mat <- NULL
+          for (j in 1:length(beta)){
+            p_mat <- cbind(p_mat, dfmbeg(data = data.df, beta = beta[j],p=p[i],q=q[j], pi=pi[i]))
+          }
+          p_mat <- p_mat/dfmbeg(data = data.df, beta = beta, p=p, q=q, pi=pi)
+          p_hat[i] <- sum(apply(p_mat,2,sum))/sum(data.df[,2]*apply(p_mat,1,sum))
+          pi_hat[i] <- sum(apply(p_mat,1,sum))
+        }
+        pi_hat <- pi_hat/sum(pi_hat)
+        par<- cbind(p_hat, pi_hat)
+        colnames(par) <- c("p", "pi")
+        return(par)
+      }
+    }
+    beta_est <- function(data.df, beta, p, q, pi){
+        if (length(beta)==1){
+          beta_hat <- mean(data.df[,2])/mean(data.df[,1])
+          q_hat <- 1
+        } else {
+          beta_hat <- NULL
+          q_hat <- NULL
+          for (i in 1:length(beta)) {
+            beta_hat <- NULL
+            for (j in 1:length(p)){
+              beta_hat <- cbind(beta_hat,dfmbeg(data = data, beta = beta[i],p=p[j], q=q[i],pi=pi[j]))
+            }
+            p_mat <- p_mat/dfmbeg(data = data.df, beta = beta, p=p, q=q, pi=pi)
+            beta_hat[i]<- sum(data.df[,2]*apply(beta_hat,1,sum))/sum(data.df[,1]*apply(beta_hat,1,sum))
+            q_hat[i] <- sum(apply(beta_mat,1,sum))
+          }
+          q_hat <- q_hat/sum(q_hat)
+          par<- cbind(beta_hat, q_hat)
+          colnames(par) <- c("beta", "q")
+          return(par)
+        }
+    }
+  ll.old <- sum(log(dfmbeg(data = data,beta = beta, p=p, q=q, pi=pi)))
   diff <- 1 + tol
   it <- 0
-  ## Geometric mass function
-  geo.dens <- function(par){
-    d <- NULL
-    for (i in 1:length(par)) {
-      d <- cbind(d, par[i]*(1-par[i])^(N-1))
-    }
-    return(d)
-  }
-  ## Gamma density function
-  gam.dens <- function(par){
-    d <- NULL
-    for (i in 1:length(par)) {
-      d <- cbind(d, dgamma(X, shape = N, rate = par[i]))
-    }
-    return(d)
-  }
+  ####
   while(diff > tol && it < maxiter){
-    ### Geometric membership probabilities
-    z <- geo.dens(p)
-    pi <- z/apply(z, 1, sum)
-    p.w <- apply(pi, 2, mean)
-    ### Gamma membership probabilities
-    v <- gam.dens(rate)
-    q <- v/apply(v, 1, sum)
-    beta.w <- apply(pi, 2, mean)
-    beta_hat<- apply(N *q, 2, mean)/apply(X *q, 2, mean)
-    p_hat <- apply(pi, 2, mean)/apply(N *pi, 2, mean)
-    w <- kronecker(rate.w,p.w)/ sum(kronecker(rate.w,p.w))
-    pair_list <- data.frame(expand.grid(rate, p),w)
-    colnames(pair_list) <- c("b","p","w")
+    ### E and M steps
+    fit_p <- p_est(data.df=data, beta=beta, p=p, q=q, pi=pi)
+    fit_beta <- beta_est(data.df=data, beta=beta, p=p, q=q, pi=pi)
+    beta <- fit_beta$beta
+    q <- fit_beta$q
+    p <- fit_p$p
+    pi <- fit_p$pi
     ll.new <- sum(log(dfmbeg(data = data,rate = rate, p=p, w=w)))
     diff <- abs(ll.new - ll.old)
     ll.old <- ll.new
@@ -237,10 +280,9 @@ fmbeg_em <- function(data, rate =NULL, p=NULL, w=NULL, m=1, l=2,
   if (it == maxiter) {
     cat("Warning! Convergence not achieved!", "\n")
   }
- para<- data.frame(expand.grid(rate, p),w)
- colnames(para) <- c("beta","p","w")
-  result <- list(par=para, log.like=ll.new,
-                 Iterations=it, posterior=q*pi, ft="fmbeg_em")
+ par<- parameters(beta,p,q,pi)
+  result <- list(par=para, beta=beta, p=p, q=q, pi=pi, log.like=ll.new,
+                 Iterations=it, ft="fmbeg_em")
 
   class(result)<- "mixEM"
   return(result)
@@ -263,30 +305,30 @@ fmbeg_em <- function(data, rate =NULL, p=NULL, w=NULL, m=1, l=2,
 #'@references  Code adapted from Young et al. (2017). mixtools Package : Tools for Analyzing Finite Mixture Models, R CRAN.
 #'
 #' @export
-fmbeg_gamma.init <- function(X, rate = NULL, w= NULL, m=2){
+fmbeg_gamma.init <- function(X, beta = NULL, q= NULL, m=2){
   n <- length(X[,1])
-  if (is.null(w)) {
+  if (is.null(q)) {
     u <- stats:: runif(m)
-    w <- u/sum(u)
+    q <- u/sum(u)
   }
 
-  if(is.null(rate)){
+  if(is.null(beta)){
   if(m==1){
-    rate = mean(X[,2])/mean(X[,1])
+    beta = mean(X[,2])/mean(X[,1])
   } else{
     x.sort<- X[order(X[,1]),]
     ind <- floor(n*cumsum(w))
-    rate<- NULL
+    beta<- NULL
     t <- x.sort[(1:(ind[1]+1)),]
-    rate[1] <- mean(t[,2])/mean(t[,1])
-    for(j in 2:length(w)){
+    beta[1] <- mean(t[,2])/mean(t[,1])
+    for(j in 2:m){
       t <- x.sort[(ind[j-1]:ind[j]),]
-      rate[j] <- mean(t[,2])/mean(t[,1])
+      beta[j] <- mean(t[,2])/mean(t[,1])
     }
   }
   ###
   }
- list(rate=rate, w=w)
+ return(list(beta=beta, q=q))
 }
 
 
@@ -305,12 +347,12 @@ fmbeg_gamma.init <- function(X, rate = NULL, w= NULL, m=2){
 #'@references  Code adapted from Young et al. (2017). mixtools Package : Tools for Analyzing Finite Mixture Models, R CRAN.
 #'
 #' @export
-fmbeg_geo.init <- function(X, p = NULL, w= NULL, l=1){
+fmbeg_geo.init <- function(X, p = NULL, pi= NULL, l=1){
   N <- X[,2]
   n <- length(N)
-  if (is.null(w)) {
+  if (is.null(pi)) {
     u <- stats:: runif(l)
-    w <- u/sum(u)
+    pi <- u/sum(u)
   } #else k <- length(w)
   if(l==1){
     N.bar <- mean(N)
@@ -319,7 +361,7 @@ fmbeg_geo.init <- function(X, p = NULL, w= NULL, l=1){
     ind <- floor(n*cumsum(w))
     N.part<-list()
     N.part[[1]] <- N.sort[1:(ind[1]+1)]
-    for(j in 2:length(w)){
+    for(j in 2:l){
       N.part[[j]] <- N.sort[ind[j-1]:ind[j]]
     }
     N.bar <- sapply(N.part,mean)
@@ -329,6 +371,6 @@ fmbeg_geo.init <- function(X, p = NULL, w= NULL, l=1){
     ind <- match(c(0,1),p)
     p <-  replace(p, ind, 0.5)
   }
-  list(p=p, w=w)
+  list(p=p, pi=pi)
 }
 
