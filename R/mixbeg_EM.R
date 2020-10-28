@@ -87,7 +87,7 @@ dfmbeg <- function(data, beta, p, q, pi, log.p=FALSE){
     den <- sum(kronecker(den.gamm, den.geo))
     return(den)
   }
-  M <- apply(data, 1, dens)
+  M <- apply(data, 1, func_den)
   if (log.p == FALSE){
     return(M)
   }else{
@@ -179,8 +179,8 @@ pfmbeg <- function(data, beta, p, q, pi, lower.tail=TRUE, log.p=FALSE){
 #' @return  list containing data frame parameter estimates, log-likelihood value and data frame of iteration
 #'
 #' @examples
-#' data.df <- rfmbeg(100, beta = c(1,2,10), p=c(0.5,0.8,0.01), q=c(0.3,0.2,0.5), pi=c(0.2,0.3,0.5))
-#' fit <- fmbeg_em(data=data.df, m=3,l=3)
+#' data <- rfmbeg(10, beta = c(1,2,10), p=c(0.5,0.8), q=c(0.3,0.2,0.5), pi=c(0.6,0.4))
+#' fit <- fmbeg_em(data=data, m=3,l=3)
 #' fit$par
 #'
 #'@references  Amponsah, C. K. and Kozubowski, T.J., and Panorska, A.K. (2020). A Mixed bivariate distribution with mixture exponential and geometric marginals. Inprint.
@@ -227,51 +227,6 @@ fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
       q <- c(apply(den,1,sum))
       return(q)
     }
-    ### parameters estimation function
-  #  p_est <- function(data.df, beta, p, q, pi){
-  #    if (length(p)==1){
-  #      p_hat <- 1/mean(data.df[,2])
-  #      pi_hat <- 1
-  #    } else {
-  #      p_hat <- NULL
-  #     pi_hat <- NULL
-  #      for (i in 1:length(p)) {
-   #       p_mat <- NULL
-   #       for (j in 1:length(beta)){
-   #         p_mat <- cbind(p_mat, q[j]*pi[i]* dfmbeg(data = data.df, beta = beta[j],p=p[i],q=1, pi=1))
-   #       }
-   #       p_mat <- p_mat/dfmbeg(data = data.df, beta = beta, p=p, q=q, pi=pi)
-   #       p_hat[i] <- sum(p_mat)/sum(data.df[,2]*apply(p_mat,1,sum))
-    #      pi_hat[i] <- sum(p_mat)
-    #    }
-    #  }
-    #  pi_hat <- pi_hat/sum(pi_hat)
-    #  par<- data.frame(p_hat, pi_hat)
-    #  colnames(par) <- c("p", "pi")
-   #   return(par)
-   # }
-   # beta_est <- function(data.df, beta, p, q, pi){
-   #     if (length(beta)==1){
-    #      beta_hat <- mean(data.df[,2])/mean(data.df[,1])
-     #     q_hat <- 1
-     #   } else {
-     #     beta_hat <- NULL
-     #     q_hat <- NULL
-     #     for (i in 1:length(beta)) {
-     #       beta_mat <- NULL
-      #      for (j in 1:length(p)){
-      #        beta_mat <- cbind(beta_mat,q[i]*pi[j]*dfmbeg(data = data.df, beta = beta[i],p=p[j], q=1,pi=1))
-      #      }
-      #      beta_mat <- beta_mat/dfmbeg(data = data.df, beta = beta, p=p, q=q, pi=pi)
-      #      beta_hat[i]<- sum(data.df[,2]*apply(beta_mat,1,sum))/sum(data.df[,1]*apply(beta_mat,1,sum))
-      #      q_hat[i] <- sum(apply(beta_mat,1,sum))
-      #    }
-       # }
-      #q_hat <- q_hat/sum(q_hat)
-    #  par<- data.frame(beta_hat, q_hat)
-     # colnames(par) <- c("beta", "q")
-    #  return(par)
-    #}
   ll.old <- - sum(log(dfmbeg(data = data,beta = beta, p=p, q=q, pi=pi)))
   diff <- 1 + tol
   it <- 0
@@ -283,10 +238,14 @@ fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
     ## M step
     pi <- apply(fit_pi, 1, sum)/ sum(apply(fit_pi, 1, sum))
     q <- apply(fit_q, 1, sum)/ sum(apply(fit_q, 1, sum))
-    beta <- fit_beta$beta
-    q <- fit_beta$q
-    p <- fit_p$p
-    pi <- fit_p$pi
+    p <- NULL
+    for (i in 1: length(pi)){
+      p[i] <- apply(fit_pi, 1, sum)[i]/sum(fit_pi[i,] *data[,2])
+    }
+    beta <- NULL
+    for (i in 1: length(q)){
+      beta[i] <- mean(fit_pi[i,] *data[,2])/mean(fit_pi[i,] *data[,1])
+    }
     ll.new <- - sum(log(dfmbeg(data = data,beta = beta, p=p, q=q, pi=pi)))
     diff <- abs(ll.new - ll.old)
     ll.old <- ll.new
@@ -327,7 +286,8 @@ fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
 fmbeg_gamma.init <- function(data, beta = NULL, q= NULL, m){
   n <- length(data[,1])
   if (is.null(q)) {
-    q <- rep(1/m, m)
+    u <- stats:: runif(m)
+    q <- u/sum(u)
   }
 
   if(is.null(beta)){
@@ -371,7 +331,7 @@ fmbeg_geo.init <- function(data, p = NULL, pi= NULL, l){
   N <- data[,2]
   n <- length(N)
   if (is.null(pi)) {
-    pi <- rep(1/l, l)
+    pi <- rep(1/l , l)
   } #else k <- length(w)
   if(l==1){
     N.bar <- mean(N)

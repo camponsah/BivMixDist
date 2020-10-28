@@ -38,8 +38,8 @@ This function computes the parameter estimates of FMBEG distribution using the E
 Takes initial guess for the parameters and the algorithm will estimate the MLE.
 }
 \examples{
-data.df <- rfmbeg(10, beta = c(1,2,10), p=0.5, q=c(0.3,0.2,0.5), pi=1)
-fit <- fmbeg_em(data=data.df, m=3,l=1)
+data.df <- rfmbeg(100, beta = c(1,2,10), p=c(0.5,0.8,0.01), q=c(0.3,0.2,0.5), pi=c(0.2,0.3,0.5))
+fit <- fmbeg_em(data=data.df, m=3,l=3)
 fit$par
 
 }
