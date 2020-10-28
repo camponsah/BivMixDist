@@ -321,7 +321,8 @@ func_mgamma_em <- function(data, beta, q, m){
 fmbeg_gamma.init <- function(data, beta = NULL, q= NULL, m){
   n <- length(data[,1])
   if (is.null(q)) {
-    q <- rep(1/m,m)
+    u <- runif(m)
+    q <- u/sum(u) #rep(1/m,m)
   }
 
   if(is.null(beta)){
@@ -365,7 +366,8 @@ fmbeg_geo.init <- function(data, p = NULL, pi= NULL, l){
   N <- data[,2]
   n <- length(N)
   if (is.null(pi)) {
-    pi <- rep(1/l, l)
+    u <- runif(l)
+    pi <- u/sum(u)# rep(1/l, l)
   }
   if(l==1){
     N.bar <- mean(N)
