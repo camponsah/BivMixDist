@@ -29,23 +29,25 @@ rfmbeg<- function(n, beta, p, q, pi){
   }
     if (length(p)==1){
       N <- stats:: rgeom(n,prob = p)+1
-    }else{
+    } else{
       u <- stats:: runif(n)
       indx <- findInterval(u, cumsum(pi))+1
       indx <- data.frame(indx)
       fun <- function(par) {
-        N <- stats:: rgeom(1, prob = p[par])+1
+        t <- stats:: rgeom(1, prob = p[par])+1
+        return(t)
       }
       N <- apply(indx, 1, fun)
     }
-  if(length(q)==1){
+  if(length(beta)==1){
     X <- stats:: rgamma(n,shape =N,rate = beta)
   } else{
     u <- stats:: runif(n)
     indx <- findInterval(u, cumsum(q))+1
     indx <- data.frame(indx,N)
     fun <- function(par) {
-      N <- stats:: rgamma(1, shape =par[2], rate = beta[par[1]])
+      t <- stats:: rgamma(1, shape =par[2], rate = beta[par[1]])
+      return(t)
     }
     X <- apply(indx, 1, fun)
   }
@@ -78,8 +80,6 @@ rfmbeg<- function(n, beta, p, q, pi){
 #'
 #' @export
 dfmbeg <- function(data, beta, p, q, pi, log.p=FALSE){
-  #if(sum(q) != 1) stop("argument 'q' must sum to 1")
-  #if (sum(pi) != 1) stop("argument 'pi' must sum to 1")
   if (c(length(q)*length(pi)) != c(length(beta)*length(p))) stop("Product of length of arguments 'q,pi' must be equal to the product of length of arguments 'beta, p'")
   func_den <- function(df){
     den.gamm <- q * dgamma(x=df[1], shape = df[2], rate=beta)
@@ -190,7 +190,6 @@ fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
                      maxiter = 1000, tol = 1e-08,verb=FALSE){
   if( !is.numeric(m) | m <= 0) stop("Gamma components argument 'm' must numeric greater than '0'")
   if(!is.numeric(l) | l <= 0) stop("Geometric components argument 'l' must numeric greater than '0'")
-  n <- length(data[,2])
   if (is.null(q) |is.null(beta)) {
     beta.init <- fmbeg_gamma.init(data, beta = beta, q=q, m=m)
     beta <- beta.init$beta
@@ -211,41 +210,20 @@ fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
       colnames(pair_list) <- c("beta","p","weights")
       return(pair_list)
     }
-    func_pi <- function(df){
-      den.gamm <- q * dgamma(x=df[1], shape = df[2], rate=beta)
-      den.geo <- pi* p*(1-p)^(df[2]-1)
-      den <- outer(den.gamm, den.geo)
-      den  <- den /sum(den)
-      pi <- c(apply(den,2,sum))
-      return(pi)
-    }
-    func_q <- function(df){
-      den.gamm <- q * dgamma(x=df[1], shape = df[2], rate=beta)
-      den.geo <- pi* p*(1-p)^(df[2]-1)
-      den <- outer(den.gamm, den.geo)
-      den  <- den /sum(den)
-      q <- c(apply(den,1,sum))
-      return(q)
-    }
+
   ll.old <- - sum(log(dfmbeg(data = data,beta = beta, p=p, q=q, pi=pi)))
   diff <- 1 + tol
   it <- 0
   ####
   while(diff > tol && it < maxiter){
-    ### E step
-    fit_pi <-  apply(data, 1, func_pi)
-    fit_q <- apply(data, 1, func_q)
+    ### E & M steps
+    fit_p <-  func_mgeo_em(data, p=p, pi=pi, l=l)
+    fit_beta <- func_mgamma_em(data, beta=beta, q=q, m=m)
     ## M step
-    pi <- apply(fit_pi, 1, sum)/ sum(apply(fit_pi, 1, sum))
-    q <- apply(fit_q, 1, sum)/ sum(apply(fit_q, 1, sum))
-    p <- NULL
-    for (i in 1: length(pi)){
-      p[i] <- apply(fit_pi, 1, sum)[i]/sum(fit_pi[i,] *data[,2])
-    }
-    beta <- NULL
-    for (i in 1: length(q)){
-      beta[i] <- mean(fit_pi[i,] *data[,2])/mean(fit_pi[i,] *data[,1])
-    }
+    pi <- fit_p$pi
+    q <- fit_beta$q
+    p <- fit_p$p
+    beta <- fit_beta$beta
     ll.new <- - sum(log(dfmbeg(data = data,beta = beta, p=p, q=q, pi=pi)))
     diff <- abs(ll.new - ll.old)
     ll.old <- ll.new
@@ -268,6 +246,63 @@ fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
 
 
 
+#' E and M steps for mxiture of geometric part of FMBEG
+#'
+#' This function computes the p and pi of FMBEG distribution.
+#'
+#' @param data  data-vector from FMBEG distribution.
+#' @param p vector of numeric parameters between 0 and 1.
+#' @param pi vector of geometric membership probabilities between 0 and 1, and sum equal to 1.
+#' @param l  number of geometric components.
+#'
+#' @return  list containing  parameter estimates of p and pi
+#'
+#' @export
+func_mgeo_em <- function(data, p, pi, l){
+  dens_mgeo <- function(par){
+    dens <- par[2]*par[1]*(1-par[1])^(data[,2]-1)
+    return(dens)
+  }
+  par <- cbind(p,pi)
+    ### E step
+    z <- apply(par, 1, dens_mgeo)
+    tau<- z/apply(z, 1, sum)
+    ### M-step
+    pi <- apply(tau, 2, mean)
+    p <- apply(tau, 2, sum)/apply(data[,2]*tau, 2, sum)
+  return(list(p=p, pi=pi))
+}
+
+
+#' E and M steps for mixture of gamma distributions part of FMBEG
+#'
+#' This function computes the beta and q of FMBEG distribution.
+#'
+#' @param data  data-vector from FMBEG distribution.
+#' @param beta numeric parameters, which must be numeric greater than 0.
+#' @param q vector of gamma membership probabilities between 0 and 1, and sum equal to 1
+#' @param m  number of gamma components.
+#'
+#' @return  list containing  parameter estimates of p and pi
+#'
+#' @export
+func_mgamma_em <- function(data, beta, q, m){
+  dens_mgamma <- function(par){
+    dens <- par[2]* dgamma(x=data[,1], shape = data[,2], rate = par[1])
+    return(dens)
+  }
+  par <- cbind(beta,q)
+    ### E step
+    z <- apply(par, 1, dens_mgamma)
+    tau<- z/apply(z, 1, sum)
+    ## M step
+    q <- apply(tau, 2, mean)
+    beta <- apply(data[,2]*tau, 2, sum)/apply(data[,1]*tau, 2, sum)
+  return(list(beta=beta, q=q))
+}
+
+
+
 #' parameter initialization for BMEG EM algorithm
 #'
 #' This function computes the parameter estimates of BMEG distribution using the EM algorithm.
@@ -286,8 +321,7 @@ fmbeg_em <- function(data, beta =NULL, p=NULL, q=NULL, pi=NULL, m=2, l=1,
 fmbeg_gamma.init <- function(data, beta = NULL, q= NULL, m){
   n <- length(data[,1])
   if (is.null(q)) {
-    u <- stats:: runif(m)
-    q <- u/sum(u)
+    q <- rep(1/m,m)
   }
 
   if(is.null(beta)){
@@ -296,7 +330,7 @@ fmbeg_gamma.init <- function(data, beta = NULL, q= NULL, m){
   } else{
     x.sort<- data[order(data[,1]),]
     ind <- floor(n*cumsum(q))
-    beta<- NULL
+    beta <- NULL
     t <- x.sort[(1:(ind[1]+1)),]
     beta[1] <- mean(t[,2])/mean(t[,1])
     for(j in 2:m){
@@ -331,8 +365,8 @@ fmbeg_geo.init <- function(data, p = NULL, pi= NULL, l){
   N <- data[,2]
   n <- length(N)
   if (is.null(pi)) {
-    pi <- rep(1/l , l)
-  } #else k <- length(w)
+    pi <- rep(1/l, l)
+  }
   if(l==1){
     N.bar <- mean(N)
   } else{
