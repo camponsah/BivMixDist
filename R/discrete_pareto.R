@@ -146,10 +146,14 @@ qdpareto<-function(prob,delta,p){
 #'@references  Amponsah, C. K.,  Kozubowski, T. J. and Panorska (2019). A computational approach to estimation of discrete Pareto parameters. Inprint.
 #'
 #' @export
-dpareto_em <- function(N, delta = 1, p = 0.5, maxiter = 1000,
+dpareto_em <- function(N, delta = 1, p = NULL, maxiter = 1000,
                        tol = 1e-8, verb=FALSE){
   n <- length(N)
-  if (!is.numeric(N)) stop("argument 'N' must be numeric")
+  if (!is.numeric(delta)) stop("argument 'delta' must be numeric greater than 0")
+  if (is.null(p)){
+    p <- 1/mean(N)
+  }
+  if ((p >= 1) | (p <= 0)) stop("argument 'p' must be numeric between 0 and 1")
   gamma_1<- - 1/(delta*log(1 - p))
   eta<- 1/delta
   log_like<- function(delta, p){
@@ -182,12 +186,12 @@ dpareto_em <- function(N, delta = 1, p = 0.5, maxiter = 1000,
       eta <- Inf
     }
     delta<- 1/eta
-    p<- 1 - exp( - mean(a))
-    gamma_1<- - 1/(delta*log(1 - p))
+    p <- 1 - exp( - mean(a))
+    gamma_1 <- - 1/(delta*log(1 - p))
     ll_new <- log_like(delta, p)
     diff <- ll_new - ll_old
     ll_old <- ll_new
-    k<- k + 1
+    k <- k + 1
     output <- rbind(output, c(k, delta, p, ll_new))
     if (verb) {
       cat("iteration =", k, " log.lik.diff =", diff, " log.lik =",
