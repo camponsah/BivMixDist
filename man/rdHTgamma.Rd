@@ -4,8 +4,17 @@
 \alias{rdHTgamma}
 \title{The family of discrete distributions with gamma hidden truncation.}
 \usage{
-rdHTgamma(n, x, alpha, beta, distr, lambda = NULL, prob = NULL,
-  delta = NULL, size = NULL)
+rdHTgamma(
+  n,
+  x,
+  alpha,
+  beta,
+  distr,
+  lambda = NULL,
+  prob = NULL,
+  delta = NULL,
+  size = NULL
+)
 }
 \arguments{
 \item{n}{size of sample.}

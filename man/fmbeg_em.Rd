@@ -4,8 +4,18 @@
 \alias{fmbeg_em}
 \title{EM algorithm function for the mixed bivariate distribution with mixture of exponential and geometric marginals (BMEG)}
 \usage{
-fmbeg_em(data, beta = NULL, p = NULL, q = NULL, pi = NULL, m = 2,
-  l = 1, maxiter = 1000, tol = 1e-08, verb = FALSE)
+fmbeg_em(
+  data,
+  beta = NULL,
+  p = NULL,
+  q = NULL,
+  pi = NULL,
+  m = 2,
+  l = 1,
+  maxiter = 1000,
+  tol = 1e-08,
+  verb = FALSE
+)
 }
 \arguments{
 \item{data}{dataframe of bivariate random vector (X,N) BMEG distribution.}

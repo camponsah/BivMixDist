@@ -4,8 +4,7 @@
 \alias{dpareto_em}
 \title{EM algorithm function for discrete Pareto distribution}
 \usage{
-dpareto_em(N, delta = 1, p = 0.5, maxiter = 1000, tol = 1e-08,
-  verb = FALSE)
+dpareto_em(N, delta = 1, p = NULL, maxiter = 1000, tol = 1e-08, verb = FALSE)
 }
 \arguments{
 \item{N}{vector of random sample from discrete Pareto distribution}

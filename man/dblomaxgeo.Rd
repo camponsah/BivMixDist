@@ -22,8 +22,6 @@ vector of densities.
 }
 \description{
 Density function for bivariate distribution with Lomax and geometric margins (BLG) distribution with parameters \eqn{\alpha >0, \beta > 0} and p in [0,1].
-
-[0,1]: R:0,1%5C
 }
 \details{
 dblomaxgeo is the density function for BLG model.

@@ -4,8 +4,7 @@
 \alias{pgammamixdpareto}
 \title{The gamma mixture discrete Pareto distribution (GMDP)}
 \usage{
-pgammamixdpareto(data, alpha, beta, delta, p, lower.tail = TRUE,
-  log.p = FALSE)
+pgammamixdpareto(data, alpha, beta, delta, p, lower.tail = TRUE, log.p = FALSE)
 }
 \arguments{
 \item{data}{vector  (X,N) representing observation from GMDP model.}
