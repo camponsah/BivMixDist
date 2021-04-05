@@ -1,5 +1,4 @@
 
-
 #' The Exponentially Tilted Gamma (ETG) distribution
 #'
 #' Probability density function of ETG with parameters \eqn{\alpha,\beta \ge 0} and \eqn{\kappa \in [0,1]}.
