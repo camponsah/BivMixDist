@@ -127,7 +127,7 @@ qdpareto<-function(prob,delta,p){
 #'
 #' This function computes the parameter estimates of discrete Pareto distribution using the EM algorithm.
 #'
-#' Takes initial guess for the parameters in discrete Pareto and the algorithm will estmate the MLE.
+#' Takes initial guess for the parameters in discrete Pareto and the algorithm will estimate the MLE.
 #'
 #' @param N  vector of random sample from discrete Pareto distribution
 #' @param delta shape parameter which must be numeric greater than or equal to 0
@@ -193,6 +193,110 @@ dpareto_em <- function(N, delta = 1, p = NULL, maxiter = 1000,
     ll_old <- ll_new
     k <- k + 1
     output <- rbind(output, c(k, delta, p, ll_new))
+    if (verb) {
+      cat("iteration =", k, " log.lik.diff =", diff, " log.lik =",
+          ll_new, "\n")
+    }
+  }
+  if (k == maxiter) {
+    cat("Warning! Convergence not achieved!", "\n")
+  }
+  output <- data.frame(output)
+  colnames(output) <- c("iteration","delta","p","log-lik")
+  par<-data.frame(t(c(delta,p)))
+  colnames(par)<-c("delta","p")
+  result <- list(par=par, log.like=ll_new, iterations=k, output=output)
+  return(result)
+}
+
+
+#' Fisher Scoring algorithm (FSA) for estimation of discrete Pareto distribution parameters.
+#'
+#' This function computes MLE of discrete Pareto distribution using the FSA algorithm.
+#'
+#' Takes initial guess for the parameters in discrete Pareto and the algorithm will estimate the MLE.
+#'
+#' @param N  vector of random sample from discrete Pareto distribution
+#' @param delta shape parameter which must be numeric greater than or equal to 0
+#' @param p  numeric parameter between 0 and 1
+#' @param maxiter maximum number of iterations
+#' @param tol tolerance value
+#' @param verb If TRUE, estimates are printed during each iteration.
+#'
+#' @return  list containg parameter estimates, Deviance and data frame of iteration
+#'
+#' @examples
+#' N<-rdpareto(500, delta=0.2,p=0.6)
+#' fit<-dpareto_em(N,maxiter = 1000)
+#' fit$par
+#'
+#'@references  Amponsah, C. K.,  Kozubowski, T. J. and Panorska (2019). A computational approach to estimation of discrete Pareto parameters. Inprint.
+#'
+#' @export
+dpareto_fsa <- function(N, delta = 1, p = NULL, maxiter = 1000,
+                       tol = 1e-8, verb=FALSE){
+  #n <- length(N)
+  if (!is.numeric(delta)) stop("argument 'delta' must be numeric greater than 0")
+  if (is.null(p)){
+    p <- 1/mean(N)
+  }
+  if ((p >= 1) | (p <= 0)) stop("argument 'p' must be numeric between 0 and 1")
+  h <- function(delta, p,n){
+    a <- log(1-delta*n*log(1-p))/(delta^2)
+    b <- (n*log(1-p))/(delta*(1-delta*n*log(1-p)))
+    c <- (1/(1-delta*n*log(1-p)))^(1/delta)
+    return((a+b)*c)
+  }
+  w <- function(delta, p,n){
+    a <- (-n/(1-p))*(1-delta*n*log(1-p))^(-(1+ 1/delta))
+   return(a)
+  }
+  g <- function(delta, p,n){
+    a <- log(1-delta*n*log(1-p))
+    b <- (1-delta*n*log(1-p))^(1/delta)
+    return(a/b)
+  }
+  v <- function(delta, p,n){
+    b <- (1-delta*n*log(1-p))^(1 + 1/delta)
+    return(n/b)
+  }
+  score <- function(delta,p,n){
+    dL <- (h(delta,p,n)-h(delta,p,n-1))/ddpareto(n,delta,p)
+    pL <- (w(delta,p,n)-w(delta,p,n-1))/ddpareto(n,delta,p)
+    return(matrix(c(sum(dL),sum(pL)),nrow = 1, ncol = 2))
+  }
+  I_mat <- function(delta, p, n){
+    D <- matrix(c(-1/(delta^2), -log(1-p), 0, delta/(1-p)),nrow = 2, ncol = 2)
+    w11 <- mean(((g(delta,p,n)-g(delta,p,n-1))/ddpareto(n,delta,p))^2)
+    w22 <- (1/(delta^2))*mean(((v(delta,p,n)-v(delta,p,n-1))/ddpareto(n,delta,p))^2)
+    w12 <- (1/(delta))*mean((g(delta,p,n)-g(delta,p,n-1))*(v(delta,p,n)-v(delta,p,n-1))/(ddpareto(n,delta,p)^2))
+    A <- matrix(c(w11,w12,w12,w22),nrow = 2, ncol = 2)
+    return((t(D)%*%A)%*%D)
+  }
+  log_like<- function(delta, p){
+    W1<- (1 - delta*(N - 1)*log(1 - p))^( - 1/delta)
+    W2<- (1 - delta*N*log(1 - p))^( - 1/delta)
+    return(sum(log( W1 - W2)))
+  }
+  ll_old <- log_like(delta, p)
+  k = 0
+  output <- c(k,delta, p, ll_old)
+  diff <- tol +1
+  while( k < maxiter){ #diff > tol &&
+   # constant<-mean(c)-log(mean(a))
+   # if(constant<0){
+   #   eta=try(suppressWarnings(stats:: nlm(f=func_eta,p=eta, ndigit = 12)$estimate),
+   #           silent=TRUE)
+   # }
+   # else{
+   #   eta <- Inf
+   # }
+    par <- c(delta,p) + score(delta,p,N)%*% solve(I_mat(delta,p,N))
+    ll_new <- log_like(par[1], par[2])
+    diff <- ll_new - ll_old
+    ll_old <- ll_new
+    k <- k + 1
+    output <- rbind(output, c(k, par[1], par[2], ll_new))
     if (verb) {
       cat("iteration =", k, " log.lik.diff =", diff, " log.lik =",
           ll_new, "\n")
