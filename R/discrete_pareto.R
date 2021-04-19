@@ -244,11 +244,11 @@ dpareto_fsa <- function(N, delta = 1, p = NULL, maxiter = 1000,
   h <- function(delta, p,n){
     a <- log(1-delta*n*log(1-p))/(delta^2)
     b <- (n*log(1-p))/(delta*(1-delta*n*log(1-p)))
-    c <- (1/(1-delta*n*log(1-p)))^(1/delta)
+    c <- (1-delta*n*log(1-p))^(-1/delta)
     return((a+b)*c)
   }
   w <- function(delta, p,n){
-    a <- (-n/(1-p))*(1-delta*n*log(1-p))^(-(1+ 1/delta))
+    a <- (n/(1-p))*(1-delta*n*log(1-p))^(-(1+ 1/delta))
    return(a)
   }
   g <- function(delta, p,n){
@@ -260,16 +260,19 @@ dpareto_fsa <- function(N, delta = 1, p = NULL, maxiter = 1000,
     b <- (1-delta*n*log(1-p))^(1 + 1/delta)
     return(n/b)
   }
-  score <- function(delta,p,n){
-    dL <- (h(delta,p,n)-h(delta,p,n-1))/ddpareto(n,delta,p)
-    pL <- (w(delta,p,n)-w(delta,p,n-1))/ddpareto(n,delta,p)
+  score <- function(delta,p,N){
+    dL <- (h(delta,p,N-1)-h(delta,p,N))/ddpareto(N,delta,p)
+    pL <- (w(delta,p,N-1)-w(delta,p,N))/ddpareto(N,delta,p)
     return(matrix(c(sum(dL),sum(pL)),nrow = 1, ncol = 2))
   }
-  I_mat <- function(delta, p, n){
+  I_mat <- function(delta, p, N){
     D <- matrix(c(-1/(delta^2), -log(1-p), 0, delta/(1-p)),nrow = 2, ncol = 2)
-    w11 <- mean(((g(delta,p,n)-g(delta,p,n-1))/ddpareto(n,delta,p))^2)
-    w22 <- (1/(delta^2))*mean(((v(delta,p,n)-v(delta,p,n-1))/ddpareto(n,delta,p))^2)
-    w12 <- (1/(delta))*mean((g(delta,p,n)-g(delta,p,n-1))*(v(delta,p,n)-v(delta,p,n-1))/(ddpareto(n,delta,p)^2))
+    a <- g(delta,p,N-1)-g(delta,p,N)
+    b <- v(delta,p,N-1)-v(delta,p,N)
+    f <- ddpareto(N,delta,p)
+    w11 <- mean((a/f)^2)
+    w22 <- mean((b/f)^2)/(delta^2)
+    w12 <- mean((a*b/(f^2)))/delta
     A <- matrix(c(w11,w12,w12,w22),nrow = 2, ncol = 2)
     return((t(D)%*%A)%*%D)
   }
@@ -282,6 +285,7 @@ dpareto_fsa <- function(N, delta = 1, p = NULL, maxiter = 1000,
   k = 0
   output <- c(k,delta, p, ll_old)
   diff <- tol +1
+  par <- c(delta,p)
   while( k < maxiter){ #diff > tol &&
    # constant<-mean(c)-log(mean(a))
    # if(constant<0){
@@ -291,7 +295,7 @@ dpareto_fsa <- function(N, delta = 1, p = NULL, maxiter = 1000,
    # else{
    #   eta <- Inf
    # }
-    par <- c(delta,p) + score(delta,p,N)%*% solve(I_mat(delta,p,N))
+    par <- par + 0.0001* score(par[1],par[2],N)%*% solve(I_mat(par[1],par[2],N)+0.0001*diag(2))
     ll_new <- log_like(par[1], par[2])
     diff <- ll_new - ll_old
     ll_old <- ll_new
@@ -307,11 +311,9 @@ dpareto_fsa <- function(N, delta = 1, p = NULL, maxiter = 1000,
   }
   output <- data.frame(output)
   colnames(output) <- c("iteration","delta","p","log-lik")
-  par<-data.frame(t(c(delta,p)))
+  par<-data.frame(t(c(par[1],par[2])))
   colnames(par)<-c("delta","p")
   result <- list(par=par, log.like=ll_new, iterations=k, output=output)
   return(result)
 }
-
-
 
