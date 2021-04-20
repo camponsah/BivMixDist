@@ -219,6 +219,7 @@ dpareto_em <- function(N, delta = 1, p = NULL, maxiter = 1000,
 #' @param N  vector of random sample from discrete Pareto distribution
 #' @param delta shape parameter which must be numeric greater than or equal to 0
 #' @param p  numeric parameter between 0 and 1
+#' @param lambda  learning parameter between 0 and 1
 #' @param maxiter maximum number of iterations
 #' @param tol tolerance value
 #' @param verb If TRUE, estimates are printed during each iteration.
@@ -233,7 +234,7 @@ dpareto_em <- function(N, delta = 1, p = NULL, maxiter = 1000,
 #'@references  Amponsah, C. K.,  Kozubowski, T. J. and Panorska (2019). A computational approach to estimation of discrete Pareto parameters. Inprint.
 #'
 #' @export
-dpareto_fsa <- function(N, delta = 1, p = NULL, maxiter = 1000,
+dpareto_fsa <- function(N, delta = 1, p = NULL, lambda=NULL, maxiter = 20,
                        tol = 1e-8, verb=FALSE){
   #n <- length(N)
   if (!is.numeric(delta)) stop("argument 'delta' must be numeric greater than 0")
@@ -282,23 +283,18 @@ dpareto_fsa <- function(N, delta = 1, p = NULL, maxiter = 1000,
     return(sum(log( W1 - W2)))
   }
   ll_old <- log_like(delta, p)
+   theta <-  c(delta,p)
   k = 0
   output <- c(k,delta, p, ll_old)
   diff <- tol +1
   par <- c(delta,p)
-  while( k < maxiter){ #diff > tol &&
-   # constant<-mean(c)-log(mean(a))
-   # if(constant<0){
-   #   eta=try(suppressWarnings(stats:: nlm(f=func_eta,p=eta, ndigit = 12)$estimate),
-   #           silent=TRUE)
-   # }
-   # else{
-   #   eta <- Inf
-   # }
-    par <- par + 0.0001* score(par[1],par[2],N)%*% solve(I_mat(par[1],par[2],N)+0.0001*diag(2))
+  while(diff > tol && k < maxiter ){ #diff > tol && & k < maxiter
+     S <- matrix(c(score(par[1],par[2],N)), nrow = 2,ncol = 1)
+     I <- I_mat(par[1],par[2],N)
+    par <- par + lambda* t(S) %*% solve(I+(S%*%t(S))*diag(2)) # +0.0001*diag(2)
     ll_new <- log_like(par[1], par[2])
-    diff <- ll_new - ll_old
-    ll_old <- ll_new
+    diff <- sqrt(sum((par - theta)^2))
+    theta <- par
     k <- k + 1
     output <- rbind(output, c(k, par[1], par[2], ll_new))
     if (verb) {
