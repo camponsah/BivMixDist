@@ -169,6 +169,7 @@ dpareto_em <- function(N, delta = 1, p = NULL, maxiter = 1000,
   k = 0
   output <- c(k,delta, p, ll_old)
   diff <- tol +1
+  par <- c(delta,p)
   while(diff > tol && k < maxiter){
     ### E step
     const<- 1/(gamma(eta)*((gamma_1 + N - 1)^(-eta) - (gamma_1 + N)^(-eta)))
@@ -189,7 +190,8 @@ dpareto_em <- function(N, delta = 1, p = NULL, maxiter = 1000,
     p <- 1 - exp( - mean(a))
     gamma_1 <- - 1/(delta*log(1 - p))
     ll_new <- log_like(delta, p)
-    diff <- ll_new - ll_old
+    diff <- (sum((c(delta,p)-par)^2))^(1/2)
+    par <- c(delta,p)
     ll_old <- ll_new
     k <- k + 1
     output <- rbind(output, c(k, delta, p, ll_new))
