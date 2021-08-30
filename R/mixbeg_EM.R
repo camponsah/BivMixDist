@@ -82,7 +82,7 @@ rfmbeg<- function(n, beta, p, q, pi){
 dfmbeg <- function(data, beta, p, q, pi, log.p=FALSE){
   if (c(length(q)*length(pi)) != c(length(beta)*length(p))) stop("Product of length of arguments 'q,pi' must be equal to the product of length of arguments 'beta, p'")
   func_den <- function(df){
-    den.gamm <- q * dgamma(x=df[1], shape = df[2], rate=beta)
+    den.gamm <- stats:: dgamma(x=df[1], shape = df[2], rate=beta) * q
     den.geo <- pi* p*(1-p)^(df[2]-1)
     den <- sum(kronecker(den.gamm, den.geo))
     return(den)
@@ -288,7 +288,7 @@ func_mgeo_em <- function(data, p, pi, l){
 #' @export
 func_mgamma_em <- function(data, beta, q, m){
   dens_mgamma <- function(par){
-    dens <- par[2]* dgamma(x=data[,1], shape = data[,2], rate = par[1])
+    dens <- stats:: dgamma(x=data[,1], shape = data[,2], rate = par[1]) * par[2]
     return(dens)
   }
   par <- cbind(beta,q)
@@ -321,7 +321,7 @@ func_mgamma_em <- function(data, beta, q, m){
 fmbeg_gamma.init <- function(data, beta = NULL, q= NULL, m){
   n <- length(data[,1])
   if (is.null(q)) {
-    u <- runif(m)
+    u <- stats:: runif(m)
     q <- u/sum(u) #rep(1/m,m)
   }
 
@@ -366,7 +366,7 @@ fmbeg_geo.init <- function(data, p = NULL, pi= NULL, l){
   N <- data[,2]
   n <- length(N)
   if (is.null(pi)) {
-    u <- runif(l)
+    u <- stats:: runif(l)
     pi <- u/sum(u)# rep(1/l, l)
   }
   if(l==1){

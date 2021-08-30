@@ -156,21 +156,16 @@ dpareto_em <- function(N, delta = 1, p = NULL, maxiter = 1000,
   if ((p >= 1) | (p <= 0)) stop("argument 'p' must be numeric between 0 and 1")
   gamma_1<- - 1/(delta*log(1 - p))
   eta<- 1/delta
-  log_like<- function(delta, p){
-    W1<- (1 - delta*(N - 1)*log(1 - p))^( - 1/delta)
-    W2<- (1 - delta*N*log(1 - p))^( - 1/delta)
-    return(sum(log( W1 - W2)+tol))
-  }
   func_eta<-function(eta){
     ll<- eta*log(eta) - lgamma(eta)- eta - eta*log(mean(a)) + eta*mean(c)
     return( -ll)
   }
-  ll_old <- log_like(delta, p)
+  ll_old <- sum(log(ddpareto(N=N,delta=delta, p=p)))
   k = 0
   output <- c(k,delta, p, ll_old)
   diff <- tol +1
   par <- c(delta,p)
-  while(diff > tol && k < maxiter){
+  while(diff > tol & k < maxiter){
     ### E step
     const<- 1/(gamma(eta)*((gamma_1 + N - 1)^(-eta) - (gamma_1 + N)^(-eta)))
     a<- const * gamma(eta + 1) * ((gamma_1 + N - 1)^(-(eta + 1)) - (gamma_1 + N)^(-(eta + 1)))
@@ -189,7 +184,7 @@ dpareto_em <- function(N, delta = 1, p = NULL, maxiter = 1000,
     delta<- 1/eta
     p <- 1 - exp( - mean(a))
     gamma_1 <- - 1/(delta*log(1 - p))
-    ll_new <- log_like(delta, p)
+    ll_new <- sum(log(ddpareto(N=N,delta=delta, p=p)))
     diff <- (sum((c(delta,p)-par)^2))^(1/2)
     par <- c(delta,p)
     ll_old <- ll_new
