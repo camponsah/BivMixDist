@@ -138,20 +138,19 @@ pbexpgeo<- function(data,beta,p, lower.tail=TRUE,log.p=FALSE){
 #' mgeo_fit  fits MGEO model to data.
 #'
 #' @param data is data.frame of observations from MGEO model
-#' @param lambda is tuning parameter greater than or equal to 0.
 #'
 #' @return  list of parameter estimates and deviance
 #'
 #' @examples
 #' Data.df<- rmgeo(n = 100,theta = 10, prob= c(0.23, 0.7))
-#' fit<-mgeo_fit(Data.df, lambda = 0.001)
+#' fit<-mgeo_fit(Data.df)
 #' fit
 #'
 #'@references  Kozubowski, T.J., & Panorska, A.K. (2005). A Mixed bivariate distribution with exponential and geometric marginals. Journal of Statistical Planning and Inference, 134, 501-520.
 #' \url{https://doi.org/10.1016/j.jspi.2004.04.010}
 #'
 #' @export
-mgeo_fit <- function(data, lambda=0.01) ## data has to be a vector (X,N)
+mgeo_fit <- function(data) ## data has to be a vector (X,N)
 {
   if (ncol(data.frame(data))==1){
     p <- 1/mean(data)
@@ -159,20 +158,23 @@ mgeo_fit <- function(data, lambda=0.01) ## data has to be a vector (X,N)
   }
   else{
     p <- 1/apply(data, 2, mean)
+    c <- (1 + min(p))/(1- min(p))
     ll <- function(x){
-      c <- min(p)
-      w <- 1 - 2 * t(((1/(1+p)))^(t(data)))
+      w <- 1 - 2 * t(((1+p))^(-t(data)))
       w <- apply(w, 1, prod)
-      l.like <- mean(w/(1 + x*w)) + lambda* ( (1/(x+1))-(x/(c-x)))
+      l.like <- sum(log(1 + x*w))
       return(-l.like)
     }
-    init_theta <- stats:: cor(data)[1,2] * 4 * (sqrt(prod(1-p)))^(-1)
-    theta <- nleqslv::nleqslv(init_theta, ll, jacobian=FALSE,control=list(btol=.01))$x
+    #s <- seq(-1, c, (c + 1)/100)
+    #ll.va <-  apply(data.frame(s), 1, ll)
+    #init_theta <- s[which(ll.va==max(ll.va))]
+    theta <- stats::optimize(ll, interval = c(-1, c))$minimum
+    # nleqslv::nleqslv(x=init_theta, fn=ll)$x
   }
-    log.like<- sum(log(dmgeo(data = data, theta = theta, prob=p)))
+  log.like<- sum(log(dmgeo(data = data, theta = theta, prob=p)))
   Output<-data.frame(matrix(c(p, theta)))
-  #colnames(Output)<-c(paste0(rep("p",length(p)), 1:length(p)), "theta")
-  #row.names(Output)<- c("estimate")
+  colnames(Output)<- "estimates"
+  row.names(Output)<- c("p1", "p2", "theta")
   result <- list(Estimates=Output,log.like=log.like)
   return(result)
 }

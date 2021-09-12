@@ -4,12 +4,10 @@
 \alias{mgeo_fit}
 \title{Fits the multivariate geometric distribution (MGEO)}
 \usage{
-mgeo_fit(data, lambda = 0.01)
+mgeo_fit(data)
 }
 \arguments{
 \item{data}{is data.frame of observations from MGEO model}
-
-\item{lambda}{is tuning parameter greater than or equal to 0.}
 }
 \value{
 list of parameter estimates and deviance
@@ -22,7 +20,7 @@ mgeo_fit  fits MGEO model to data.
 }
 \examples{
 Data.df<- rmgeo(n = 100,theta = 10, prob= c(0.23, 0.7))
-fit<-mgeo_fit(Data.df, lambda = 0.001)
+fit<-mgeo_fit(Data.df)
 fit
 
 }
