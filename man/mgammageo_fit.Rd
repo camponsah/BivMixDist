@@ -19,7 +19,7 @@ This function computes the parameters of the model .
 mgammageo_fit  fits MMGG model to data.
 }
 \examples{
-Data.df<- data.df<- rmgammageo(20, alpha=c(0.5, 1.5), beta=c(20, 50), prob=c(0.6, 0.4), theta= -0.2)
+Data.df<- rmgammageo(1000, alpha=c(1, 2), beta=c(1, 10), prob=c(0.6, 0.45), theta= -0.2)
 fit <- mgammageo_fit(Data.df)
 fit
 

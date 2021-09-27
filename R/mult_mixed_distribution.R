@@ -24,8 +24,8 @@
 rmgammageo<- function(n, alpha, beta, prob, theta, log.p=FALSE){
   N <- rmgeo(n=n, theta = theta, prob = prob)
   sim_r <- function(x){
-    X <- rgamma(n=1, shape = x[1]*alpha[1], rate = beta[1])
-    Y <- rgamma(n=1, shape = x[2]*alpha[2], rate = beta[2])
+    X <- stats:: rgamma(n=1, shape = x[1]*alpha[1], rate = beta[1])
+    Y <- stats:: rgamma(n=1, shape = x[2]*alpha[2], rate = beta[2])
     return(c(X, x[1], Y, x[2]))
   }
   M <- t(apply(data.frame(N), 1, sim_r))
@@ -90,7 +90,7 @@ dmgammageo<- function(data, alpha, beta, prob, theta, log.p=FALSE){
 #' @return  list of parameter estimates and the log-likelihood value
 #'
 #' @examples
-#' Data.df<- data.df<- rmgammageo(20, alpha=c(0.5, 1.5), beta=c(20, 50), prob=c(0.6, 0.4), theta= -0.2)
+#' Data.df<- rmgammageo(1000, alpha=c(1, 2), beta=c(1, 10), prob=c(0.6, 0.45), theta= -0.2)
 #' fit <- mgammageo_fit(Data.df)
 #' fit
 #'
