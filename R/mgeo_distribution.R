@@ -138,6 +138,7 @@ pbexpgeo<- function(data,beta,p, lower.tail=TRUE,log.p=FALSE){
 #' mgeo_fit  fits MGEO model to data.
 #'
 #' @param data is data.frame of observations from MGEO model
+#' @param tol is error tolerance level for checking convergence.
 #'
 #' @return  list of parameter estimates and deviance
 #'
@@ -150,34 +151,96 @@ pbexpgeo<- function(data,beta,p, lower.tail=TRUE,log.p=FALSE){
 #' \url{https://doi.org/10.1016/j.jspi.2004.04.010}
 #'
 #' @export
-mgeo_fit <- function(data) ## data has to be a vector (X,N)
+mgeo_fit <- function(data, tol = .Machine$double.eps^(1/3)) ## data has to be a vector (X,N)
 {
-  if (ncol(data.frame(data))==1){
-    p <- 1/mean(data)
-    theta <- 0
+  log.lik.theta <- function(x){
+    w1 <- 2* (1 + p[1])^(- data[,1])
+    w2 <- 2* (1 + p[2])^(- data[,2])
+    w <- (1-w1)*(1-w2)
+    w <- mean(log(1 + x * w))
+    return(w)
   }
-  else{
-    p <- 1/apply(data, 2, mean)
-    c <- (1 + min(p))/(1- min(p))
-    ll <- function(x){
-      w <- 1 - 2 * t(((1+p))^(-t(data)))
-      w <- apply(w, 1, prod)
-      l.like <- sum(log(1 + x*w))
-      return(-l.like)
+
+  log.lik.p <- function(x){
+    ll1 <- sum(log(x[1:2] )) + sum((apply(data, 2, mean)-1)*log(1-x[1:2]))
+    w1 <- 2* (1+x[1])^(- data[,1])
+    w2 <- 2* (1+x[2])^(- data[,2])
+    w <- (1-w1)*(1-w2)
+    ll2 <- mean(log(1 + theta * w))
+    return(ll1+ll2)
+  }
+   g.prime <- function(x) {
+     w1 <- 2* (1+p[1])^(- data[,1])
+     w2 <- 2* (1+p[2])^(- data[,2])
+     w <- (1-w1)*(1-w2)
+     w <- w/(1 + -1 * w)
+     return(mean(w))
+   }
+   euclid <- function(a, b) sqrt(sum((a - b)^2))
+   theta <- 0
+   p <- as.numeric(1/apply(data, 2, mean))
+   diff <- euclid(c(p, theta), rep(0,3) ) + 1
+   par_old <- c(p, theta)
+  while(diff > tol) {
+    C <- (1 + min(p))/(1- min(p))
+    lb <- g.prime(-1)
+    ub <- g.prime(C)
+    if (lb > 0 & ub >0){
+      theta <- C
+      if (theta <= 1){
+        p <- stats:: optim(par = p , log.lik.p
+                   , lower = rep(0, 2)
+                   , upper = rep(1,2),
+                   method = "L-BFGS-B")$par
+      } else {
+        p <- stats:: optim(par = p , log.lik.p
+                   , lower = rep((theta-1)/(theta+1), 2)
+                   , upper = rep(1,2)
+                   , method = "L-BFGS-B")$par
+      }
+      diff <- euclid(c(p, theta), par_old )
+      par_old <- c(p, theta)
+    }else if (lb < 0 & ub < 0){
+      theta <- -1
+      p <- stats:: optim(par = p , log.lik.p
+                 , lower = rep(0, 2)
+                 , upper = rep(1, 2)
+                 , method = "L-BFGS-B")$par
+      diff <- euclid(c(p, theta), par_old )
+      par_old <- c(p, theta)
+    }else{
+      s <- seq(-1, C, (C + 1)/1000)
+      ll.va <- apply(data.frame(s), 1, log.lik.theta)
+      init_theta <- s[which(ll.va == max(ll.va))]
+      theta <- stats:: optim(par = init_theta , log.lik.theta
+                     , lower = -1, upper = c
+                     , method = "Brent")$par
+      if (theta <= 1){
+        p <- stats:: optim(par = p , log.lik.p
+                   , lower = rep(0, 2)
+                   , upper = rep(1,2)
+                   , method = "L-BFGS-B")$par
+      } else {
+        p <- stats:: optim(par = p , log.lik.p
+                   , lower = rep((theta-1)/(theta+1), 2)
+                   , upper = rep(1,2)
+                   , method = "L-BFGS-B")$par
+      }
+      diff <- euclid(c(p, theta), par_old )
+      par_old <- c(p, theta)
     }
-    #s <- seq(-1, c, (c + 1)/100)
-    #ll.va <-  apply(data.frame(s), 1, ll)
-    #init_theta <- s[which(ll.va==max(ll.va))]
-    theta <- stats::optimize(ll, interval = c(-1, c))$minimum
-    # nleqslv::nleqslv(x=init_theta, fn=ll)$x
   }
-  log.like<- sum(log(dmgeo(data = data, theta = theta, prob=p)))
-  Output<-data.frame(matrix(c(p, theta)))
-  colnames(Output)<- "estimates"
-  row.names(Output)<- c("p1", "p2", "theta")
-  result <- list(Estimates=Output,log.like=log.like)
-  return(result)
+   log.like<- sum(log(dmgeo(data = data, theta = theta, prob=p)))
+   Output<-t(data.frame(matrix(c(p, theta))))
+   colnames(Output)<- c("p1", "p2", "theta")
+   row.names(Output)<- NULL
+   result <- list(par=Output,log.like=log.like)
+   return(result)
 }
+
+
+
+
 
 
 

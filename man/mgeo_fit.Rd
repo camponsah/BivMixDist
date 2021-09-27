@@ -4,10 +4,12 @@
 \alias{mgeo_fit}
 \title{Fits the multivariate geometric distribution (MGEO)}
 \usage{
-mgeo_fit(data)
+mgeo_fit(data, tol = .Machine$double.eps^(1/3))
 }
 \arguments{
 \item{data}{is data.frame of observations from MGEO model}
+
+\item{tol}{is error tolerance level for checking convergence.}
 }
 \value{
 list of parameter estimates and deviance
