@@ -127,12 +127,10 @@ mgammageo_fit <- function(data) {
   V2 <- stats:: var(Y)
   alpha1 <- mean(N*((mean(X))^2)/V1)
   alpha2 <- mean(M*((mean(Y))^2)/V2)
-  a1 <- stats:: optim(par = alpha1 , fn = log.lik.alpha1
-                         , method = "Brent")$par
-  a2 <- stats:: optim(par = alpha2 , fn = log.lik.alpha2
-                      , method = "Brent")$par
-  a <- c(a1, a2)
-  b <- a * c( mean(N)/mean(X), mean(M)/mean(Y))
+  ab1 <- bgammageo_fit( data = data[, 1:2])$estimates[1:2]
+  ab2 <- bgammageo_fit( data = data[, 3:4])$estimates[1:2]
+  a <- c(ab1[1], ab2[1])
+  b <- c(ab1[2], ab2[2])
   # estimate p1, p2 and theta
   par <- mgeo_fit(data = data[,c(2,4)])$par
   p <- par[1:2]
