@@ -128,10 +128,8 @@ mgammageo_fit <- function(data) {
   alpha1 <- mean(N*((mean(X))^2)/V1)
   alpha2 <- mean(M*((mean(Y))^2)/V2)
   a1 <- stats:: optim(par = alpha1 , fn = log.lik.alpha1
-                         , lower = 0, upper = Inf
                          , method = "Brent")$par
   a2 <- stats:: optim(par = alpha2 , fn = log.lik.alpha2
-                      , lower = 0, upper = Inf
                       , method = "Brent")$par
   a <- c(a1, a2)
   b <- a * c( mean(N)/mean(X), mean(M)/mean(Y))
