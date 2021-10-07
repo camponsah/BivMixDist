@@ -16,7 +16,8 @@ Imports:
     utils,
     Renext,
     MultiRNG,
-    nleqslv
+    nleqslv,
+    nloptr
 Roxygen: list(markdown=TRUE)
 RoxygenNote: 7.1.1
 Suggests:

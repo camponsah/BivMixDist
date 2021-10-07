@@ -4,7 +4,7 @@
 \alias{mgeo_fit}
 \title{Fits the multivariate geometric distribution (MGEO)}
 \usage{
-mgeo_fit(data, tol = .Machine$double.eps^(1/3))
+mgeo_fit(data, tol = .Machine$double.eps^(1/2), maxiter = 500)
 }
 \arguments{
 \item{data}{is data.frame of observations from MGEO model}

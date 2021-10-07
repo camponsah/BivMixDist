@@ -151,8 +151,19 @@ pbexpgeo<- function(data,beta,p, lower.tail=TRUE,log.p=FALSE){
 #' \url{https://doi.org/10.1016/j.jspi.2004.04.010}
 #'
 #' @export
-mgeo_fit <- function(data, tol = .Machine$double.eps^(1/3)) ## data has to be a vector (X,N)
+mgeo_fit <- function(data, tol = .Machine$double.eps^(1/2),
+                     maxiter = 500) ## data has to be a dataframe (N,M)
 {
+  log.lik <- function(x){
+    mn <- apply(data, 2, mean)
+    ll1 <- log(x[1]) +log(x[2]) + (mn[1]-1)*log(1-x[1])
+    ll1 <- ll1 + (mn[2]-1)*log(1-x[2])
+    w1 <- 2* (1+x[1])^(- data[,1])
+    w2 <- 2* (1+x[2])^(- data[,2])
+    w <- (1-w1)*(1-w2)
+    ll2 <- mean(log(1 + x[3] * w))
+    return(-(ll1+ll2))
+  }
   log.lik.theta <- function(x){
     w1 <- 2* (1 + p[1])^(- data[,1])
     w2 <- 2* (1 + p[2])^(- data[,2])
@@ -160,76 +171,28 @@ mgeo_fit <- function(data, tol = .Machine$double.eps^(1/3)) ## data has to be a 
     w <- mean(log(1 + x * w))
     return(w)
   }
+  p <- 1/apply(data, 2, mean)
+  c <- (1 + min(p))/ (1-min(p))
 
-  log.lik.p <- function(x){
-    mn <- apply(data, 2, mean)
-    ll1 <- log(x[1]) +log(x[2]) + (mn[1]-1)*log(1-x[1]) + (mn[2]-1)*log(1-x[2])
-    w1 <- 2* (1+x[1])^(- data[,1])
-    w2 <- 2* (1+x[2])^(- data[,2])
-    w <- (1-w1)*(1-w2)
-    ll2 <- mean(log(1 + theta * w))
-    return(ll1+ll2)
+  s <- seq(-1, c, (c + 1)/1000)
+  ll.va <- apply(data.frame(s), 1, log.lik.theta)
+  init_theta <- s[which(ll.va == max(ll.va))]
+  if ( is.infinite(init_theta))
+  {init_theta <- 0
+  } else if ( length(init_theta) != 1)
+  { init_theta <- 0
+  }else {
+    init_theta <- init_theta
   }
-   g.prime <- function(x) {
-     w1 <- 2* (1+p[1])^(- data[,1])
-     w2 <- 2* (1+p[2])^(- data[,2])
-     w <- (1-w1)*(1-w2)
-     w <- w/(1 + -1 * w)
-     return(mean(w))
-   }
-   euclid <- function(a, b) sqrt(sum((a - b)^2))
-   theta <- 0
-   p <- as.numeric(1/apply(data, 2, mean))
-   diff <- euclid(c(p, theta), rep(0,3) ) + 1
-   par_old <- c(p, theta)
-  while(diff > tol) {
-    C <- (1 + min(p))/(1- min(p))
-    lb <- g.prime(-1)
-    ub <- g.prime(C)
-    if (lb > 0 & ub >0){
-      theta <- C
-      r <- (theta-1)/(theta+1)
-      p <- stats:: optim(par = rep((r + tol), 2)
-                         , log.lik.p
-                         , lower = rep((r + tol), 2)
-                         , upper = rep(0.99999,2)
-                         , method = "L-BFGS-B")$par
-      diff <- euclid(c(p, theta), par_old )
-      par_old <- c(p, theta)
-    }else if (lb < 0 & ub < 0){
-      theta <- -1
-      p <- stats:: optim(par = rep(0.5, 2)
-                         , log.lik.p
-                         , lower = rep(0.00001, 2)
-                         , upper = rep(0.99999,2)
-                         , method = "L-BFGS-B")$par
-      diff <- euclid(c(p, theta), par_old )
-      par_old <- c(p, theta)
-    }else{
-      s <- seq(-1, C, (C + 1)/1000)
-      ll.va <- apply(data.frame(s), 1, log.lik.theta)
-      init_theta <- s[which(ll.va == max(ll.va))]
-      theta <- stats:: optim(par = init_theta , log.lik.theta
-                     , lower = -1, upper = C
-                     , method = "Brent")$par
-      if (theta < 1){
-        p <- stats:: optim(par = rep(0.5, 2) , log.lik.p
-                           , lower = rep(0.00001, 2)
-                           , upper = rep(0.99999,2)
-                           , method = "L-BFGS-B")$par
-      } else {
-        r <- (theta-1)/(theta+1)
-        p <- stats:: optim(par = rep((r + tol), 2)
-                           , log.lik.p
-                           , lower = rep((r + tol), 2)
-                           , upper = rep(0.99999,2)
-                           , method = "L-BFGS-B")$par
-      }
-      diff <- euclid(c(p, theta), par_old )
-      par_old <- c(p, theta)
-    }
-  }
-  log.like<- sum(log(dmgeo(data = data, theta = theta, prob=p)))
+  par <- nloptr:: crs2lm(x0 = c(p, init_theta), fn =log.lik
+               , lower= c(0,0,-1), upper =c(1,1,c)
+               , pop.size = 100000
+               , ranseed = NULL
+               , xtol_rel = tol)$par
+  p <- par[1:2]
+  theta <- par[3]
+  log.like<- sum(log(dmgeo(data = data, theta = theta
+                           , prob=p)))
   Output<-t(data.frame(matrix(c(p, theta))))
   colnames(Output)<- c("p1", "p2", "theta")
   row.names(Output)<- NULL
